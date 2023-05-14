@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('article_tags', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('tag_id')->unsigned();
+            $table->bigInteger('article_id')->unsigned();
+
+            $table->foreign('tag_id')->references('id')->on('tags')->onUpdate('cascade')->onDelete('no action');
+            $table->foreign('article_id')->references('id')->on('articles')->onUpdate('cascade')->onDelete('no action');
+
             $table->timestamps();
         });
     }
