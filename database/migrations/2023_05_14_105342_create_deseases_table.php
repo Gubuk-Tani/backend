@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('deseases', function (Blueprint $table) {
             $table->id();
+
+            $table->string('name');
+            $table->string('description');
+            $table->string('image')->nullable();
+            $table->bigInteger('article_id')->unsigned();
+
+            $table->foreign('article_id')->references('id')->on('articles')->onUpdate('cascade')->onDelete('no action');
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }

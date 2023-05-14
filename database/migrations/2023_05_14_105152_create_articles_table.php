@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
+
+            $table->enum('type', ['community', 'desease', 'pesticide']);
+            $table->string('title');
+            $table->string('content');
+            $table->bigInteger('user_id')->unsigned();
+
+
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('no action');
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }
