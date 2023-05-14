@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
 
-            $table->enum('type', ['community', 'desease', 'pesticide']);
+            $table->enum('type', ['community', 'disease', 'pesticide']);
             $table->string('title');
             $table->string('content');
             $table->bigInteger('user_id')->unsigned();

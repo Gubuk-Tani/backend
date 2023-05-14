@@ -43,9 +43,9 @@ class Article extends Model
         return $this->hasMany(ArticleImage::class);
     }
 
-    public function desease()
+    public function disease()
     {
-        return $this->hasOne(Desease::class);
+        return $this->hasOne(Disease::class);
     }
 
     public function pesticide()
