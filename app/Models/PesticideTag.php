@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use DateTimeInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PesticideTag extends Model
 {
@@ -34,5 +33,10 @@ class PesticideTag extends Model
     public function pesticide()
     {
         return $this->belongsTo(Pesticide::class);
+    }
+
+    public function tag()
+    {
+        return $this->belongsTo(Tag::class);
     }
 }

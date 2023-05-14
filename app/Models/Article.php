@@ -52,4 +52,9 @@ class Article extends Model
     {
         return $this->hasOne(Pesticide::class);
     }
+
+    public function tags()
+    {
+        return $this->hasMany(ArticleTag::class)->with('tag');
+    }
 }

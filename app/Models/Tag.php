@@ -35,9 +35,9 @@ class Tag extends Model
         return $this->hasMany(ArticleTag::class);
     }
 
-    public function deseaseTags()
+    public function diseaseTags()
     {
-        return $this->hasMany(DeseaseTag::class);
+        return $this->hasMany(DiseaseTag::class);
     }
 
     public function pesticideTags()
