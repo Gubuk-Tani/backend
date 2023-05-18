@@ -143,6 +143,34 @@ class ArticleController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $request->validate([
+            'type' => 'required|string',
+            'title' => 'required|string',
+            'content' => 'required|string',
+        ]);
+
+        $article = article::query()->find(Auth::article()->id);
+
+        if ($article->type != $request->input('type')){
+            $request->validate([
+                'type'=>'required|string',
+            ]);
+
+            try {
+                $article->update([
+                    'type'=> $request->input('type'),
+                    'title'=> $request->input('title'),
+                    'content'=> $request->input('content'),
+                ]);
+
+                return ResponseFormatter::success([
+                    'article'=> $article,
+                ], 'Data Artikel Diubah', 200);
+
+            } catch (Exception $error) {
+                return ResponseFormatter::error('Ada Yang Salah. Autentikasi Gagal.', 500);
+            }
+        }
     }
 
     /**
@@ -167,4 +195,6 @@ class ArticleController extends Controller
             return ResponseFormatter::error('Artikel Gagal Dihapus' . $error, 500);
         }
     }
+
+
 }
