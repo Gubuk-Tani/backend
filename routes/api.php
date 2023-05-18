@@ -28,4 +28,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [UserController::class, 'logout']);
 
     Route::apiResource('article', 'ArticleController');
+    Route::apiResource('article/{article_id}/comment', 'CommentController');
 });

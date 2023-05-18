@@ -39,7 +39,7 @@ class ArticleController extends Controller
                 ->orWhere('tags.tag', 'like', '%' . $search . '%');
         }
 
-        $articles->with(['articleImages', 'tags'])->select('articles.*')->latest();
+        $articles->with(['articleImages', 'tags', 'comments'])->select('articles.*')->latest();
 
         return ResponseFormatter::success(
             $articles->paginate($limit),
@@ -133,7 +133,7 @@ class ArticleController extends Controller
     public function show(string $id)
     {
         return ResponseFormatter::success([
-            'article' => Article::with(['articleImages', 'tags'])->find($id),
+            'article' => Article::with(['articleImages', 'tags', 'comments'])->find($id),
         ], 'Artikel Berhasil Ditemukan', 200);
     }
 
@@ -142,34 +142,27 @@ class ArticleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
         $request->validate([
             'type' => 'required|string',
             'title' => 'required|string',
             'content' => 'required|string',
         ]);
 
-        $article = article::query()->find(Auth::article()->id);
+        try {
+            $article = article::query()->find($id);
 
-        if ($article->type != $request->input('type')){
-            $request->validate([
-                'type'=>'required|string',
+            // Update Article
+            $article->update([
+                'type' => $request->input('type'),
+                'title' => $request->input('title'),
+                'content' => $request->input('content'),
             ]);
 
-            try {
-                $article->update([
-                    'type'=> $request->input('type'),
-                    'title'=> $request->input('title'),
-                    'content'=> $request->input('content'),
-                ]);
-
-                return ResponseFormatter::success([
-                    'article'=> $article,
-                ], 'Data Artikel Diubah', 200);
-
-            } catch (Exception $error) {
-                return ResponseFormatter::error('Ada Yang Salah. Autentikasi Gagal.', 500);
-            }
+            return ResponseFormatter::success([
+                'article' => $article->with(['articleImages', 'tags'])->find($id),
+            ], 'Data Artikel Berhasil Diubah', 200);
+        } catch (Exception $error) {
+            return ResponseFormatter::error('Ada Yang Salah. Autentikasi Gagal.', 500);
         }
     }
 
@@ -195,6 +188,4 @@ class ArticleController extends Controller
             return ResponseFormatter::error('Artikel Gagal Dihapus' . $error, 500);
         }
     }
-
-
 }

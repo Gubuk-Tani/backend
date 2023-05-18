@@ -14,48 +14,46 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    //
-
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $request->validate([
-            'name'=> 'required|string|max:255',
-            'username'=>'required|string|max:50|unique:users',
-            'email'=>'required|string|email|max:255|unique:users',
-            'password'=>['required', 'string', new Password],
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:50|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => ['required', 'string', new Password],
         ]);
 
         try {
             User::create([
-                'name'=> $request->input('name'),
-                'username'=> $request->input('username'),
-                'email'=> $request->input('email'),
-                'password'=> Hash::make($request->password),
-                'role'=> 'enduser', 
+                'name' => $request->input('name'),
+                'username' => $request->input('username'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->password),
+                'role' => 'enduser',
             ]);
 
             $user = User::where('email', $request->input('email'))->first();
             $token = $user->createToken('authToken')->plainTextToken;
 
             return ResponseFormatter::success([
-                'access_token'=> $token,
-                'token_type'=> 'Bearer',
-                'user'=> $user,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user,
             ], 'Akun Berhasil Dibuat', 201);
-
         } catch (Exception $error) {
             return ResponseFormatter::error('Ada Yang Salah. Autentikasi Gagal.', 500);
         }
-
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $request->validate([
-            'email'=> 'required|string|email',
-            'password'=> 'required',
+            'email' => 'required|string|email',
+            'password' => 'required',
         ]);
 
         try {
-            $credentials= request(['email', 'password']);
+            $credentials = request(['email', 'password']);
 
             if (!Auth::attempt($credentials)) {
                 return ResponseFormatter::error('Email Atau Password Salah. Autentikasi Gagal.', 401);
@@ -70,44 +68,45 @@ class UserController extends Controller
             $token = $user->createToken('authToken')->plainTextToken;
 
             return ResponseFormatter::success([
-                'access_token'=> $token,
-                'token_type'=> 'Bearer',
-                'user'=> $user,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user,
             ], 'Berhasil Masuk', 200);
-
         } catch (Exception $error) {
             return ResponseFormatter::error('Ada Yang Salah. Autentikasi Gagal.', 500);
         }
     }
 
-    public function fetch() {
+    public function fetch()
+    {
         $user = User::find(Auth::user()->id);
 
         return ResponseFormatter::success([
-            'user'=> $user,
+            'user' => $user,
         ], 'Data Pengguna Ditemukan', 200);
     }
 
-    public function update(Request $request) {
+    public function update(Request $request)
+    {
         $request->validate([
-            'name'=> 'required|string|max:255',
-            'avatar'=>'nullable|file',
-            'city'=>'nullable|string',
+            'name' => 'required|string|max:255',
+            'avatar' => 'nullable|file',
+            'city' => 'nullable|string',
         ]);
 
         $user = user::query()->find(Auth::user()->id);
 
-        if ($user->username != $request->input('username')){
+        if ($user->username != $request->input('username')) {
             $request->validate([
-                'username'=>'required|string|max:50|unique:users',
+                'username' => 'required|string|max:50|unique:users',
             ]);
         }
 
-        try { 
+        try {
             $user->update([
-                'name'=> $request->input('name'),
-                'username'=> $request->input('username'),
-                'city'=> $request->input('city'),
+                'name' => $request->input('name'),
+                'username' => $request->input('username'),
+                'city' => $request->input('city'),
             ]);
 
             $avatar_path = '';
@@ -124,24 +123,24 @@ class UserController extends Controller
 
                 // Add to database
                 $user->update([
-                    'avatar'=> $avatar_path,
+                    'avatar' => $avatar_path,
                 ]);
             }
 
             return ResponseFormatter::success([
-                'user'=> $user,
+                'user' => $user,
             ], 'Data Pengguna Diubah', 200);
-        
-        } catch (Exception $error){
+        } catch (Exception $error) {
             return ResponseFormatter::error('Ada Yang Salah. Autentikasi Gagal.', 500);
         }
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $token = $request->user()->currentAccessToken()->delete();
 
         return ResponseFormatter::success([
-            'token'=> $token,
+            'token' => $token,
         ], 'Berhasil Keluar', 200);
     }
 }
