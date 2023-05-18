@@ -25,11 +25,13 @@ class CommentController extends Controller
             $comments->where('user_id', $user_id);
         }
 
-        $comments->with(['user']);
+        $comments->with(['user'])->latest();
 
-        return ResponseFormatter::success([
-            'comment' => $comments->paginate($limit),
-        ], 'Komentar Ditemukan', 200);
+        return ResponseFormatter::success(
+            $comments->paginate($limit),
+            'Komentar Ditemukan',
+            200
+        );
     }
 
     /**

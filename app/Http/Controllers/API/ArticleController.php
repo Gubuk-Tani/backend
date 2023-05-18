@@ -57,8 +57,8 @@ class ArticleController extends Controller
             'type' => 'required|string',
             'title' => 'required|string',
             'content' => 'required|string',
-            // 'images' => 'nullable',
-            // 'images.*' => 'nullable|file',
+            'images' => 'nullable',
+            'images.*' => 'nullable|file',
             'tags' => 'nullable|string',
         ]);
 
@@ -98,11 +98,12 @@ class ArticleController extends Controller
             }
 
             // Tags
-
-            $tags = explode(', ', $request->input('tags'));
+            $tags = explode(',', $request->input('tags'));
 
             foreach ($tags as $item) {
                 $tag = Tag::query();
+
+                $item = trim($item);
 
                 if (sizeof(Tag::where('tag', $item)->get()) == 0) {
                     $tag = $tag->create([
