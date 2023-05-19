@@ -35,10 +35,10 @@ class Disease extends Model
 
     public function article()
     {
-        return $this->belongsTo(Article::class);
+        return $this->belongsTo(Article::class)->with('tags');
     }
 
-    public function diseaseTags()
+    public function tags()
     {
         return $this->hasMany(DiseaseTag::class)->with('tag');
     }

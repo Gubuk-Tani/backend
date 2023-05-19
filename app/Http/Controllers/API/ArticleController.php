@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleImage;
 use App\Models\ArticleTag;
+use App\Models\Comment;
+use App\Models\Disease;
+use App\Models\Pesticide;
 use App\Models\Tag;
 use Exception;
 use Illuminate\Http\Request;
@@ -53,75 +56,12 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'type' => 'required|string',
-            'title' => 'required|string',
-            'content' => 'required|string',
-            'images' => 'nullable',
-            'images.*' => 'nullable|file',
-            'tags' => 'nullable|string',
-        ]);
-
-        $user = Auth::user();
-
         try {
-            $article = Article::query();
-
-            $article = $article->create([
-                'type' => $request->input('type'),
-                'title' => $request->input('title'),
-                'content' => $request->input('content'),
-                'user_id' => $user->id,
-            ]);
-
-            // Images
-            $images = [];
-
-            // Store images
-            if ($request->hasFile('images')) {
-                $files = $request->allFiles('images');
-
-                foreach ($files as $image) {
-                    $image_path = '';
-                    $image_path = $image->store('article');
-
-                    $images[] = $image_path;
-                }
-            }
-
-            // Add images to database
-            foreach ($images as $image) {
-                ArticleImage::create([
-                    'image' => $image,
-                    'article_id' => $article->id,
-                ]);
-            }
-
-            // Tags
-            $tags = explode(',', $request->input('tags'));
-
-            foreach ($tags as $item) {
-                $tag = Tag::query();
-
-                $item = trim($item);
-
-                if (sizeof(Tag::where('tag', $item)->get()) == 0) {
-                    $tag = $tag->create([
-                        'tag' => $item,
-                    ]);
-                } else {
-                    $tag = $tag->where('tag', $item)->first();
-                }
-
-                // Article Tag
-                ArticleTag::create([
-                    'tag_id' => $tag->id,
-                    'article_id' => $article->id,
-                ]);
-            }
+            // Add article
+            $article = $this->addArticle($request);
 
             return ResponseFormatter::success([
-                'article' => Article::with(['articleImages', 'tags'])->find($article->id),
+                'article' => $article,
             ], 'Artikel Berhasil Dibuat', 201);
         } catch (Exception $error) {
             return ResponseFormatter::error('Artikel Gagal Dibuat' . $error, 400);
@@ -133,8 +73,14 @@ class ArticleController extends Controller
      */
     public function show(string $id)
     {
+        $article = Article::with(['articleImages', 'tags', 'comments'])->find($id);
+
+        if (!$article) {
+            return ResponseFormatter::error('Artikel Tidak Ditemukan', 404);
+        }
+
         return ResponseFormatter::success([
-            'article' => Article::with(['articleImages', 'tags', 'comments'])->find($id),
+            'article' => $article,
         ], 'Artikel Berhasil Ditemukan', 200);
     }
 
@@ -149,9 +95,13 @@ class ArticleController extends Controller
             'content' => 'required|string',
         ]);
 
-        try {
-            $article = article::query()->find($id);
+        $article = article::find($id);
 
+        if (!$article) {
+            return ResponseFormatter::error('Artikel Tidak Ditemukan', 404);
+        }
+
+        try {
             // Update Article
             $article->update([
                 'type' => $request->input('type'),
@@ -172,21 +122,99 @@ class ArticleController extends Controller
      */
     public function destroy(string $id)
     {
-        ArticleImage::where('article_id', $id)->delete();
-        ArticleTag::where('article_id', $id)->delete();
+        $article = Article::find($id);
 
-        $article = Article::query();
+        if (!$article) {
+            return ResponseFormatter::error('Artikel Tidak Ditemukan', 404);
+        }
 
         try {
-            $article->find($id)->delete();
+            Comment::where('article_id', $id)->delete();
+            ArticleImage::where('article_id', $id)->delete();
+            ArticleTag::where('article_id', $id)->delete();
+            Disease::where('article_id', $id)->delete();
+            Pesticide::where('article_id', $id)->delete();
+            $article->delete();
 
             return ResponseFormatter::success(
-                null,
+                $article->id,
                 'Artikel Berhasil Dihapus',
                 200,
             );
         } catch (Exception $error) {
             return ResponseFormatter::error('Artikel Gagal Dihapus' . $error, 500);
         }
+    }
+
+    public function addArticle(Request $request)
+    {
+        $request->validate([
+            'type' => 'required|string',
+            'title' => 'required|string',
+            'content' => 'required|string',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|file',
+            'tags' => 'nullable|string',
+        ]);
+
+        $user = Auth::user();
+
+        $article = Article::query();
+
+        $article = $article->create([
+            'type' => $request->input('type'),
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'user_id' => $user->id,
+        ]);
+
+        // Images
+        $images = [];
+
+        // Store images
+        if ($request->hasFile('images')) {
+            $files = $request->file('images');
+
+            foreach ($files as $image) {
+                $image_path = '';
+                $image_path = $image->store('article');
+
+                $images[] = $image_path;
+            }
+        }
+
+        // Add images to database
+        foreach ($images as $image) {
+            ArticleImage::create([
+                'image' => $image,
+                'article_id' => $article->id,
+            ]);
+        }
+
+        // Tags
+        $tags = explode(',', $request->input('tags'));
+
+        foreach ($tags as $item) {
+            $tag = Tag::query();
+
+            $item = trim($item);
+
+            if (sizeof(Tag::where('tag', $item)->get()) == 0) {
+                $tag = $tag->create([
+                    'tag' => $item,
+                ]);
+            } else {
+                $tag = $tag->where('tag', $item)->first();
+            }
+
+            // Article Tag
+            ArticleTag::create([
+                'tag_id' => $tag->id,
+                'article_id' => $article->id,
+            ]);
+        }
+
+        $article = Article::with(['articleImages', 'tags'])->find($article->id);
+        return $article;
     }
 }

@@ -35,10 +35,10 @@ class Pesticide extends Model
 
     public function article()
     {
-        return $this->belongsTo(Article::class);
+        return $this->belongsTo(Article::class)->with('tags');
     }
 
-    public function pesticideTags()
+    public function tags()
     {
         return $this->hasMany(PesticideTag::class)->with('tag');
     }

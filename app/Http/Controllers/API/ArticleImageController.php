@@ -60,9 +60,13 @@ class ArticleImageController extends Controller
     {
         $article_image = ArticleImage::where('article_id', $article_id)->find($id);
 
+        if (!$article_image) {
+            return ResponseFormatter::error('Gambar Artikel Tidak Ditemukan', 404);
+        }
+
         return ResponseFormatter::success([
             'article_image' => $article_image,
-        ], 'Komentar Ditemukan', 200);
+        ], 'Gambar Artikel Ditemukan', 200);
     }
 
     /**
@@ -75,6 +79,10 @@ class ArticleImageController extends Controller
         ]);
 
         $article_image = ArticleImage::where('article_id', $article_id)->find($id);
+
+        if (!$article_image) {
+            return ResponseFormatter::error('Gambar Artikel Tidak Ditemukan', 404);
+        }
 
         // Store images
         if ($request->hasFile('image')) {

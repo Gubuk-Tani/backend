@@ -30,4 +30,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('article', 'ArticleController');
     Route::apiResource('article/{article_id}/comment', 'CommentController');
     Route::apiResource('article/{article_id}/image', 'ArticleImageController');
+    Route::apiResource('disease', 'DiseaseController');
+    Route::apiResource('pesticide', 'PesticideController');
 });
