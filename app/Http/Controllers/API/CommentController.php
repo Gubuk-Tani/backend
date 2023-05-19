@@ -95,10 +95,18 @@ class CommentController extends Controller
      */
     public function destroy(string $article_id, string $id)
     {
-        Comment::where('article_id', $article_id)->find($id)->delete();
+        $comment = Comment::where('article_id', $article_id)->find($id);
 
-        return ResponseFormatter::success([
-            null,
-        ], 'Komentar Berhasil Dihapus', 200);
+        if (!$comment) {
+            return ResponseFormatter::error('Komentar Tidak Ditemukan', 404);
+        }
+
+        $comment->delete();
+
+        return ResponseFormatter::success(
+            $comment->id,
+            'Komentar Berhasil Dihapus',
+            200
+        );
     }
 }
