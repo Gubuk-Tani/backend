@@ -27,7 +27,7 @@ class SettingController extends Controller
 
         return ResponseFormatter::success(
             [
-                'setting' => $settings,
+                'settings' => $settings,
             ],
             'Pengaturan Ditemukan',
             200,
@@ -76,7 +76,7 @@ class SettingController extends Controller
 
             return ResponseFormatter::success(
                 [
-                    'setting' => $settings,
+                    'settings' => $settings,
                 ],
                 'Pengaturan Berhasil Ditambahkan',
                 201
@@ -159,7 +159,7 @@ class SettingController extends Controller
 
         return ResponseFormatter::success(
             [
-                'setting' => $settings,
+                'settings' => $settings,
             ],
             'Pengaturan Berhasil Diubah',
             200,
