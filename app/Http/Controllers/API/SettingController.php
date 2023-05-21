@@ -138,7 +138,8 @@ class SettingController extends Controller
             }
 
             // Store image
-            $image_path = $request->file('value')->store('public');
+            $file_name = $request->file('value')->getClientOriginalName();
+            $image_path = $request->file('value')->storeAs('public', $file_name);
             $value = $image_path;
         }
 
