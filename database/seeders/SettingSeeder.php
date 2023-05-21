@@ -16,7 +16,7 @@ class SettingSeeder extends Seeder
         $data = [
             ['key' => 'app_name', 'value' => 'Gubuk Tani'],
             ['key' => 'app_description', 'value' => ''],
-            ['key' => 'app_logo', 'value' => 'public/gubuk-tani-logo.png'],
+            ['key' => 'app_logo', 'value' => 'gubuk-tani-logo.png'],
         ];
 
         foreach ($data as $value) {
