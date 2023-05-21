@@ -34,4 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('article/{article_id}/image', 'ArticleImageController');
     Route::apiResource('disease', 'DiseaseController');
     Route::apiResource('pesticide', 'PesticideController');
+
+    // Admin Area
+    Route::get('users', [UserController::class, 'index']);
+    Route::delete('users', [UserController::class, 'destroyUsers']);
 });

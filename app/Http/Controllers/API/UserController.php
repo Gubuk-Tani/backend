@@ -143,4 +143,51 @@ class UserController extends Controller
             'token' => $token,
         ], 'Berhasil Keluar', 200);
     }
+
+    // Admin Area
+    public function index(Request $request)
+    {
+        // Checking user role
+        if (Auth::user()->role != 'admin') {
+            return ResponseFormatter::error('Anda Bukan Admin', 401);
+        }
+
+        $limit = $request->input('limit', 10);
+
+        $users = User::query();
+
+        return ResponseFormatter::success(
+            $users->paginate($limit),
+            'Data Seluruh Pengguna Ditemukan',
+        );
+    }
+
+    public function destroyUsers(Request $request)
+    {
+        // Checking user role
+        if (Auth::user()->role != 'admin') {
+            return ResponseFormatter::error('Anda Bukan Admin', 401);
+        }
+
+        $users = $request->input('users');
+
+        $result = [];
+
+        foreach ($users as $user_id) {
+            $user = User::find($user_id);
+
+            if (!$user) {
+                $result[][(string) $user_id]['success'] = false;
+                $result[][(string) $user_id]['message'] = 'Pengguna Tidak Ditemukan';
+                continue;
+            }
+
+            $user->delete();
+
+            $result[][(string) $user_id]['success'] = true;
+            $result[][(string) $user_id]['message'] = 'Pengguna Berhasil Dihapus';
+        }
+
+        ResponseFormatter::success($result, 'Penghapusan Banyak Pengguna Berhasil Dilakukan', 200);
+    }
 }
