@@ -117,6 +117,11 @@ class ArticleController extends Controller
 
                 $item = trim($item);
 
+                $previousTags = ArticleTag::where('tag', $item)
+                    ->andWhere('article_id', $article->id)->get();
+                $previousTags->delete();
+
+
                 if (sizeof(Tag::where('tag', $item)->get()) == 0) {
                     $tag = $tag->create([
                         'tag' => $item,
@@ -126,7 +131,7 @@ class ArticleController extends Controller
                 }
 
                 // Article Tag
-                ArticleTag::updateOrCreate([
+                ArticleTag::create([
                     'tag_id' => $tag->id,
                     'article_id' => $article->id,
                 ]);
