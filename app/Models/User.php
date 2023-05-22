@@ -32,6 +32,7 @@ class User extends Authenticatable
         'avatar',
         'city',
         'role',
+        'disabled_at',
     ];
 
     /**

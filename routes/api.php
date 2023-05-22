@@ -26,7 +26,7 @@ Route::post('/auth/login', [UserController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [UserController::class, 'fetch']);
-    Route::post('/profile', [UserController::class, 'update']);
+    Route::post('/profile', [UserController::class, 'updateProfile']);
     Route::post('/auth/logout', [UserController::class, 'logout']);
 
     Route::apiResource('article', 'ArticleController');
@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('pesticide', 'PesticideController');
 
     // Admin Area
-    Route::get('users', [UserController::class, 'index']);
-    Route::delete('users', [UserController::class, 'destroyUsers']);
+    Route::apiResource('users', 'UserController');
+    Route::put('users/{id}/disable', [UserController::class, 'disable']);
+    Route::put('users/{id}/enable', [UserController::class, 'enable']);
 });

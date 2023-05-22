@@ -4,10 +4,13 @@ namespace App\Http\Controllers\API;
 
 use Exception;
 use App\Models\User;
+use App\Models\Article;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use Laravel\Fortify\Rules\Password;
 use App\Http\Controllers\Controller;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -65,6 +68,10 @@ class UserController extends Controller
                 throw new Exception('Invalid Credentials');
             }
 
+            if ($user->disabled_at) {
+                return ResponseFormatter::error('Status Pengguna Tidak Aktif. Hubungi Admin Apabila Ada Kesalahan.', 400);
+            }
+
             $token = $user->createToken('authToken')->plainTextToken;
 
             return ResponseFormatter::success([
@@ -86,7 +93,7 @@ class UserController extends Controller
         ], 'Data Pengguna Ditemukan', 200);
     }
 
-    public function update(Request $request)
+    public function updateProfile(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -145,6 +152,8 @@ class UserController extends Controller
     }
 
     // Admin Area
+
+    // Get All Users
     public function index(Request $request)
     {
         // Checking user role
@@ -159,6 +168,168 @@ class UserController extends Controller
         return ResponseFormatter::success(
             $users->paginate($limit),
             'Data Seluruh Pengguna Ditemukan',
+        );
+    }
+
+    // Get User
+    public function show(string $id)
+    {
+        // Checking user role
+        if (Auth::user()->role != 'admin') {
+            return ResponseFormatter::error('Anda Bukan Admin', 401);
+        }
+
+        $user = User::find($id);
+
+        if (!$user) {
+            return ResponseFormatter::error('Data Pengguna Tidak Ditemukan', 404);
+        }
+
+        return ResponseFormatter::success(
+            [
+                'user' => $user,
+            ],
+            'Data Pengguna Ditemukan',
+        );
+    }
+
+    // Update
+    public function update(Request $request, string $id)
+    {
+        // Checking user role
+        if (Auth::user()->role != 'admin') {
+            return ResponseFormatter::error('Anda Bukan Admin', 401);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'avatar' => 'nullable|file',
+            'city' => 'nullable|string',
+        ]);
+
+        $user = user::query()->find($id);
+
+        if (!$user) {
+            return ResponseFormatter::error('Data Pengguna Tidak Ditemukan', 404);
+        }
+
+        // Validate username
+        if ($user->username != $request->input('username')) {
+            $request->validate([
+                'username' => 'required|string|max:50|unique:users',
+            ]);
+        }
+
+        // Validate email
+        if ($user->email != $request->input('email')) {
+            $request->validate([
+                'email' => 'required|string|email|max:255|unique:users',
+            ]);
+        }
+
+        try {
+            $user->update([
+                'name' => $request->input('name'),
+                'username' => $request->input('username'),
+                'email' => $request->input('email'),
+                'city' => $request->input('city'),
+                'role' => $request->input('role'),
+            ]);
+
+            if ($request->input('password') && $request->input('password' != '')) {
+                $user->update([
+                    'password' => Hash::make($request->password),
+                ]);
+            }
+
+            if ($request->hasFile('avatar')) {
+                $avatar_path = '';
+
+                // Delete old avatar
+                if ($user->avatar) {
+                    Storage::delete($user->avatar);
+                }
+
+                // Store avatar 
+                $avatar_path = $request->file('avatar')->store('user');
+
+                // Add to database
+                $user->update([
+                    'avatar' => $avatar_path,
+                ]);
+            }
+
+            return ResponseFormatter::success([
+                'user' => $user,
+            ], 'Data Pengguna Diubah', 200);
+        } catch (Exception $error) {
+            return ResponseFormatter::error('Ada Yang Salah.', 500);
+        }
+    }
+
+    // Disable
+    public function disable(string $id)
+    {
+        // Checking user role
+        if (Auth::user()->role != 'admin') {
+            return ResponseFormatter::error('Anda Bukan Admin', 401);
+        }
+
+        $user = user::query()->find($id);
+
+        if (!$user) {
+            return ResponseFormatter::error('Data Pengguna Tidak Ditemukan', 404);
+        }
+
+        if ($user->disabled_at) {
+            return ResponseFormatter::error('Pengguna Telah Non-aktif Sebelumnya', 400);
+        }
+
+        $user->update([
+            'disabled_at' => now()->toDateTimeString(),
+        ]);
+
+        $user = user::query()->find($id);
+
+        return ResponseFormatter::success(
+            [
+                'user' => $user,
+            ],
+            'Pengguna Berhasil Di-non-aktifkan',
+            200,
+        );
+    }
+
+    // Enable
+    public function enable(string $id)
+    {
+        // Checking user role
+        if (Auth::user()->role != 'admin') {
+            return ResponseFormatter::error('Anda Bukan Admin', 401);
+        }
+
+        $user = user::query()->find($id);
+
+        if (!$user) {
+            return ResponseFormatter::error('Data Pengguna Tidak Ditemukan', 404);
+        }
+
+        if (!$user->disabled_at) {
+            return ResponseFormatter::error('Pengguna Telah Aktif Sebelumnya.', 400);
+        }
+
+        $user->update([
+            'disabled_at' => null,
+        ]);
+
+        $user = user::query()->find($id);
+
+        return ResponseFormatter::success(
+            [
+                'user' => $user,
+            ],
+            'Pengguna Berhasil Diaktifkan',
+            200,
         );
     }
 }
