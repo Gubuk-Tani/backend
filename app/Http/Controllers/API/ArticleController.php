@@ -117,12 +117,6 @@ class ArticleController extends Controller
 
                 $item = trim($item);
 
-                $previousTags = ArticleTag::where('tag', $item)
-                    ->where('article_id', $article->id)->get();
-                    
-                $previousTags->delete();
-
-
                 if (sizeof(Tag::where('tag', $item)->get()) == 0) {
                     $tag = $tag->create([
                         'tag' => $item,
@@ -130,6 +124,10 @@ class ArticleController extends Controller
                 } else {
                     $tag = $tag->where('tag', $item)->first();
                 }
+
+                $previousTags = ArticleTag::where('article_tags.article_id', $article->id)->get();
+
+                $previousTags->delete();
 
                 // Article Tag
                 ArticleTag::create([
