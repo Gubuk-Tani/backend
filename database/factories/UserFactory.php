@@ -34,10 +34,11 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
-            
+
             'username' => $this->faker->userName(),
             'city' => $this->faker->city(),
             'avatar' => null,
+            'role' => 'enduser',
         ];
     }
 
