@@ -171,6 +171,52 @@ class UserController extends Controller
         );
     }
 
+    // Add User
+    public function store(Request $request)
+    {
+        // Checking user role
+        if (Auth::user()->role != 'admin') {
+            return ResponseFormatter::error('Anda Bukan Admin', 401);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:50|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'avatar' => 'nullable|file',
+            'city' => 'nullable|string',
+        ]);
+
+        try {
+            $user = User::create([
+                'name' => $request->input('name'),
+                'username' => $request->input('username'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->password),
+                'city' => $request->input('city'),
+                'role' => $request->input('role'),
+            ]);
+
+            if ($request->hasFile('avatar')) {
+                $avatar_path = '';
+
+                // Store avatar 
+                $avatar_path = $request->file('avatar')->store('user');
+
+                // Add to database
+                $user->update([
+                    'avatar' => $avatar_path,
+                ]);
+            }
+
+            return ResponseFormatter::success([
+                'user' => $user,
+            ], 'Data Pengguna Berhasil Ditambahkan', 201);
+        } catch (Exception $error) {
+            return ResponseFormatter::error('Ada Yang Salah.', 500);
+        }
+    }
+
     // Get User
     public function show(string $id)
     {
