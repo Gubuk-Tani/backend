@@ -126,7 +126,7 @@ class ArticleController extends Controller
                 }
 
                 // Article Tag
-                ArticleTag::create([
+                ArticleTag::updateOrCreate([
                     'tag_id' => $tag->id,
                     'article_id' => $article->id,
                 ]);
