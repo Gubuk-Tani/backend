@@ -143,7 +143,7 @@ class ArticleController extends Controller
                 'article' => $article->with(['articleImages', 'tags'])->find($id),
             ], 'Data Artikel Berhasil Diubah', 200);
         } catch (Exception $error) {
-            return ResponseFormatter::error('Ada Yang Salah. Autentikasi Gagal.' + $error, 500);
+            return ResponseFormatter::error('Ada Yang Salah. Autentikasi Gagal.' . $error, 500);
         }
     }
 
