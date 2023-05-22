@@ -236,7 +236,7 @@ class UserController extends Controller
                 'role' => $request->input('role'),
             ]);
 
-            if ($request->input('password') && $request->input('password' != '')) {
+            if ($request->input('password') && $request->input('password') != '') {
                 $user->update([
                     'password' => Hash::make($request->password),
                 ]);
