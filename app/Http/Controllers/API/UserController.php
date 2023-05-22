@@ -161,9 +161,20 @@ class UserController extends Controller
             return ResponseFormatter::error('Anda Bukan Admin', 401);
         }
 
+        $search = $request->input('search');
         $limit = $request->input('limit', 10);
 
-        $users = User::query()->latest();
+        $users = User::query();
+
+        if ($search) {
+            $users
+                ->where('users.name', 'like', '%' . $search . '%')
+                ->orWhere('users.username', 'like', '%' . $search . '%')
+                ->orWhere('users.email', 'like', '%' . $search . '%')
+                ->orWhere('users.city', 'like', '%' . $search . '%');
+        }
+
+        $users->latest();
 
         return ResponseFormatter::success(
             $users->paginate($limit),
