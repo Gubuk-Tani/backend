@@ -125,7 +125,7 @@ class ArticleController extends Controller
                     $tag = $tag->where('tag', $item)->first();
                 }
 
-                $previousTags = ArticleTag::where('article_tags.article_id', $article->id)->get();
+                $previousTags = ArticleTag::where('article_tags.article_id', $article->id);
 
                 $previousTags->delete();
 
