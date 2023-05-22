@@ -109,6 +109,31 @@ class ArticleController extends Controller
                 'content' => $request->input('content'),
             ]);
 
+            // Update Tags
+            $tags = explode(',', $request->input('tags'));
+
+            foreach ($tags as $item) {
+                $tag = Tag::query();
+
+                $item = trim($item);
+
+                if (sizeof(Tag::where('tag', $item)->get()) == 0) {
+                    $tag = $tag->create([
+                        'tag' => $item,
+                    ]);
+                } else {
+                    $tag = $tag->where('tag', $item)->first();
+                }
+
+                // Article Tag
+                ArticleTag::create([
+                    'tag_id' => $tag->id,
+                    'article_id' => $article->id,
+                ]);
+            }
+
+            $article = article::find($id);
+
             return ResponseFormatter::success([
                 'article' => $article->with(['articleImages', 'tags'])->find($id),
             ], 'Data Artikel Berhasil Diubah', 200);
