@@ -118,7 +118,8 @@ class ArticleController extends Controller
                 $item = trim($item);
 
                 $previousTags = ArticleTag::where('tag', $item)
-                    ->andWhere('article_id', $article->id)->get();
+                    ->where('article_id', $article->id)->get();
+                    
                 $previousTags->delete();
 
 
