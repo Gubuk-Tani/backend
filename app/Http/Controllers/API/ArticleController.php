@@ -110,6 +110,10 @@ class ArticleController extends Controller
             ]);
 
             // Update Tags
+            $previousTags = ArticleTag::where('article_tags.article_id', $article->id);
+
+            $previousTags->delete();
+
             $tags = explode(',', $request->input('tags'));
 
             foreach ($tags as $item) {
@@ -124,10 +128,6 @@ class ArticleController extends Controller
                 } else {
                     $tag = $tag->where('tag', $item)->first();
                 }
-
-                $previousTags = ArticleTag::where('article_tags.article_id', $article->id);
-
-                $previousTags->delete();
 
                 // Article Tag
                 ArticleTag::create([
