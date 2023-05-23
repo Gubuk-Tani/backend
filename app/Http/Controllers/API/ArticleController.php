@@ -181,8 +181,8 @@ class ArticleController extends Controller
             'type' => 'required|string',
             'title' => 'required|string',
             'content' => 'required|string',
-            'article_images' => 'nullable|array',
-            'article_images.*' => 'nullable|file',
+            'article_images.*' => 'nullable|array',
+            'article_images.*.image' => 'nullable|file',
             'tags' => 'nullable|string',
         ]);
 
@@ -206,7 +206,7 @@ class ArticleController extends Controller
 
             foreach ($files as $image) {
                 $image_path = '';
-                $image_path = $image->store('article');
+                $image_path = $image->image->store('article');
 
                 $images[] = $image_path;
             }
