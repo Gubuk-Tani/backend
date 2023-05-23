@@ -16,9 +16,8 @@ return new class extends Migration
 
             $table->enum('type', ['community', 'disease', 'pesticide']);
             $table->string('title');
-            $table->string('content');
+            $table->string('content', 3000);
             $table->bigInteger('user_id')->unsigned();
-
 
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('no action');
 
