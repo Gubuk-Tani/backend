@@ -40,7 +40,7 @@ class CommentController extends Controller
     public function store(Request $request, string $article_id)
     {
         $request->validate([
-            'comment' => 'required|string',
+            'comment' => 'required|string|max:2200',
         ]);
 
         $comment = Comment::create([
@@ -74,7 +74,7 @@ class CommentController extends Controller
     public function update(Request $request, string $article_id, string $id)
     {
         $request->validate([
-            'comment' => 'required|string',
+            'comment' => 'required|string|max:2200',
         ]);
 
         $comment = Comment::find($id);

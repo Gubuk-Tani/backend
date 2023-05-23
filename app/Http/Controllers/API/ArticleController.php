@@ -91,8 +91,8 @@ class ArticleController extends Controller
     {
         $request->validate([
             'type' => 'required|string',
-            'title' => 'required|string',
-            'content' => 'required|string',
+            'title' => 'required|string|max:255',
+            'content' => 'required|string|max:3000',
         ]);
 
         $article = article::find($id);
@@ -179,11 +179,11 @@ class ArticleController extends Controller
     {
         $request->validate([
             'type' => 'required|string',
-            'title' => 'required|string',
-            'content' => 'required|string',
+            'title' => 'required|string|max:255',
+            'content' => 'required|string|max:3000',
             'images' => 'nullable|array',
             'images.*' => 'nullable|file',
-            'tags' => 'nullable|string',
+            'tags' => 'nullable|string|max:255',
         ]);
 
         $user = Auth::user();

@@ -78,8 +78,8 @@ class PesticideController extends Controller
 
         // Add Pesticide
         $request->validate([
-            'pesticide.name' => 'required|string',
-            'pesticide.description' => 'required|string',
+            'pesticide.name' => 'required|string|max:255',
+            'pesticide.description' => 'required|string|max:255',
             'pesticide.image' => 'nullable|file',
         ]);
 
@@ -132,8 +132,8 @@ class PesticideController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'required|string',
-            'description' => 'required|string',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
             'image' => 'nullable|file',
         ]);
 

@@ -78,8 +78,8 @@ class DiseaseController extends Controller
 
         // Add Disease
         $request->validate([
-            'disease.name' => 'required|string',
-            'disease.description' => 'required|string',
+            'disease.name' => 'required|string|max:255',
+            'disease.description' => 'required|string|max:255',
             'disease.image' => 'nullable|file',
         ]);
 
@@ -132,8 +132,8 @@ class DiseaseController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'required|string',
-            'description' => 'required|string',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
             'image' => 'nullable|file',
         ]);
 

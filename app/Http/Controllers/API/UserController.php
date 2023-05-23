@@ -98,7 +98,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'avatar' => 'nullable|file',
-            'city' => 'nullable|string',
+            'city' => 'nullable|string|max:255',
         ]);
 
         $user = user::query()->find(Auth::user()->id);
@@ -195,7 +195,7 @@ class UserController extends Controller
             'username' => 'required|string|max:50|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'avatar' => 'nullable|file',
-            'city' => 'nullable|string',
+            'city' => 'nullable|string|max:255',
         ]);
 
         try {
@@ -261,7 +261,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'avatar' => 'nullable|file',
-            'city' => 'nullable|string',
+            'city' => 'nullable|string|max:255',
         ]);
 
         $user = user::query()->find($id);
