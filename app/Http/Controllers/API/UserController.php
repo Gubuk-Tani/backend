@@ -96,7 +96,7 @@ class UserController extends Controller
     public function updateProfile(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'avatar' => 'nullable|file',
             'city' => 'nullable|string|max:255',
         ]);
@@ -105,7 +105,7 @@ class UserController extends Controller
 
         if ($user->username != $request->input('username')) {
             $request->validate([
-                'username' => 'required|string|max:50|unique:users',
+                'username' => 'nullable|string|max:50|unique:users',
             ]);
         }
 
