@@ -61,7 +61,7 @@ class DetectionController extends Controller
                 'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection'
             );
 
-            dd($token);
+            dd($token->body());
 
             // return ResponseFormatter::success($token, 'Berhasil', 200);
 
