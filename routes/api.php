@@ -40,4 +40,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('users/{id}/disable', [UserController::class, 'disable']);
     Route::put('users/{id}/enable', [UserController::class, 'enable']);
     Route::apiResource('plant', 'PlantController');
+    Route::apiResource('plant/{plant_id}/label', 'LabelController');
 });
