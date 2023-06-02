@@ -61,7 +61,9 @@ class DetectionController extends Controller
                 'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection'
             );
 
-            return ResponseFormatter::success($token, 'Berhasil', 200);
+            dd($token);
+
+            // return ResponseFormatter::success($token, 'Berhasil', 200);
 
             $ml_endpoint = Setting::select('settings.value')->where('key', 'ml_endpoint')->first();
             $plant = strtolower(Plant::select('plants.name')->find($request->input('plant_id')));
