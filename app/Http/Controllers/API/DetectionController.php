@@ -55,16 +55,10 @@ class DetectionController extends Controller
             $image_path = '';
             $image_path = $request->file('image')->store('detection');
 
-            // $token = Http::withHeaders([
-            //     'Metadata-Flavor' => 'Google'
-            // ])->get(
-            //     'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection'
-            // );
-
             $token = Http::withHeaders([
                 'Metadata-Flavor' => 'Google'
             ])->get(
-                'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=https://app.gubuktani.com'
+                'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection'
             );
 
             dd($token);
