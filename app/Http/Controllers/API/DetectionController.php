@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\API;
 
+use Exception;
+use App\Models\Plant;
+use App\Models\Disease;
+use App\Models\Setting;
 use App\Models\Detection;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Models\Disease;
-use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class DetectionController extends Controller
 {
@@ -50,6 +54,29 @@ class DetectionController extends Controller
             // Store images
             $image_path = '';
             $image_path = $request->file('image')->store('detection');
+
+            $token = Http::withHeaders([
+                'Metadata-Flavor' => 'Google'
+            ])->get(
+                'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection'
+            );
+
+            return ResponseFormatter::success($token, 'Berhasil', 200);
+
+            $ml_endpoint = Setting::select('settings.value')->where('key', 'ml_endpoint')->first();
+            $plant = strtolower(Plant::select('plants.name')->find($request->input('plant_id')));
+
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Authorization' => 'bearer' . $token,
+            ])->post($ml_endpoint, [
+                'plant' => $plant,
+                'file' => Storage::get($image_path),
+            ]);
+
+
+
+
 
             $detection = Detection::create([
                 'image' => $image_path,
