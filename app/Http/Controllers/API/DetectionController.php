@@ -84,7 +84,7 @@ class DetectionController extends Controller
                 'plant' => $plant,
             ])->wait();
 
-            dd($response->object());
+            return ResponseFormatter::success($response->object(), 'Success', 200);
 
 
             // $response = $response->wait();
