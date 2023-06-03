@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Exception;
+use App\Models\Tag;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Disease;
@@ -13,6 +14,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\API\ArticleController;
+use App\Models\DiseaseTag;
 
 class DiseaseController extends Controller
 {
@@ -88,7 +90,6 @@ class DiseaseController extends Controller
             $article = Article::find(1);
         }
 
-        // Add Disease
         $request->validate([
             'disease.name' => 'required|string|max:255',
             'disease.description' => 'required|string|max:255',
@@ -96,6 +97,7 @@ class DiseaseController extends Controller
         ]);
 
         try {
+            // Add Disease
             $disease = Disease::create([
                 'name' => $request->input('disease.name'),
                 'description' => $request->input('disease.description'),
@@ -113,6 +115,29 @@ class DiseaseController extends Controller
             }
 
             $disease = Disease::with('article')->find($disease->id);
+
+            // Tags
+            $tags = explode(',', $request->input('disease.tags'));
+
+            foreach ($tags as $item) {
+                $tag = Tag::query();
+
+                $item = trim($item);
+
+                if (sizeof(Tag::where('tag', $item)->get()) == 0) {
+                    $tag = $tag->create([
+                        'tag' => $item,
+                    ]);
+                } else {
+                    $tag = $tag->where('tag', $item)->first();
+                }
+
+                // Disease Tag
+                DiseaseTag::create([
+                    'tag_id' => $tag->id,
+                    'disease_id' => $disease->id,
+                ]);
+            }
 
             return ResponseFormatter::success([
                 'disease' => $disease,
