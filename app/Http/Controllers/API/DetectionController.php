@@ -77,7 +77,7 @@ class DetectionController extends Controller
                     Storage::get($image_path)
                 )->post($ml_endpoint, [
                     'plant' => $plant,
-                ])->then(fn (Response|TransferException $result) => $this->handleResult($result));
+                ])->then(fn (Response|TransferException $result) => dd($result));
             } catch (Exception $error) {
                 return ResponseFormatter::error('Error' . $error, 500);
             }
