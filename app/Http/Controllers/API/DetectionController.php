@@ -68,7 +68,7 @@ class DetectionController extends Controller
             $ml_endpoint = Setting::select('settings.value')->where('key', 'ml_endpoint')->first();
             $plant = strtolower(Plant::select('plants.name')->find($request->input('plant_id')));
 
-            $response = Http::async()->withHeaders([
+            $response = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Authorization' => 'bearer ' . $token->body(),
             ])->attach(
@@ -78,9 +78,7 @@ class DetectionController extends Controller
                 'plant' => $plant,
             ]);
 
-            dd($response->body());
-
-
+            dd($response);
 
             $detection = Detection::create([
                 'image' => $image_path,
