@@ -82,7 +82,7 @@ class DetectionController extends Controller
             ])->wait();
 
             // dd($response->body());
-            ResponseFormatter::success($plant, 'Ini apa?', 200);
+            return ResponseFormatter::success($plant, 'Ini apa?', 200);
 
             // $response = $response->wait();
 
