@@ -8,13 +8,15 @@ use App\Models\Disease;
 use App\Models\Setting;
 use App\Models\Detection;
 use Illuminate\Http\Request;
+use GuzzleHttp\Psr7\Response;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use GuzzleHttp\Exception\TransferException;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 
 class DetectionController extends Controller
 {
@@ -77,7 +79,19 @@ class DetectionController extends Controller
                 Storage::get($image_path)
             )->post($ml_endpoint, [
                 'plant' => $plant,
-            ]);
+            ])->then(
+                function (ResponseInterface $res) {
+                    $response = json_decode($res->getBody()->getContents());
+
+                    return $response;
+                },
+                // function (RequestException $e) {
+                //     $response = [];
+                //     $response->data = $e->getMessage();
+
+                //     return $response;
+                // }
+            );
 
             $response->wait();
 
