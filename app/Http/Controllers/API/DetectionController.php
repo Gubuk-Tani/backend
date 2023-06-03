@@ -77,9 +77,9 @@ class DetectionController extends Controller
             ])->attach(
                 'file',
                 Storage::get($image_path)
-            )->post($ml_endpoint, [
+            )->withBody([
                 'plant' => $plant,
-            ]);
+            ])->post($ml_endpoint);
 
             $response = $response->wait();
 
