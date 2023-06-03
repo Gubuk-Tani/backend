@@ -69,20 +69,20 @@ class DetectionController extends Controller
 
             $ml_endpoint = Setting::select('settings.value')->where('key', 'ml_endpoint')->first();
             $plant = strtolower(Plant::select('plants.name')->find($request->input('plant_id')));
-            $file = Storage::get($image_path);
+
 
 
             $response = Http::async()->withHeaders([
                 'Accept' => 'application/json',
                 'Authorization' => 'bearer ' . $token->body(),
-            ])->withBody(
-                base64_encode($file),
-                'image/jpeg'
+            ])->attach(
+                'file',
+                Storage::get($image_path),
             )->post('https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection', [
                 'plant' => $plant,
             ])->wait();
 
-            dd($response->body());
+            dd($response->headers());
 
             // $response = $response->wait();
 
