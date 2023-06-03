@@ -78,7 +78,7 @@ class DetectionController extends Controller
                 'plant' => $plant,
             ]);
 
-            dd($response);
+            dd($response->body());
 
 
 
