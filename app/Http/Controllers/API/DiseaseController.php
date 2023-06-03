@@ -74,7 +74,19 @@ class DiseaseController extends Controller
     public function store(Request $request)
     {
         // Add Article
-        $article = (new ArticleController)->addArticle($request);
+        $article = null;
+
+        if (
+            $request->input('type') &&
+            $request->input('title') &&
+            $request->input('content')
+        ) {
+            $article = (new ArticleController)->addArticle($request);
+        }
+
+        if ($request->input('article_id')) {
+            $article = Article::find($request->input('article_id'));
+        }
 
         // Add Disease
         $request->validate([
