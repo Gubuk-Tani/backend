@@ -174,6 +174,7 @@ class DiseaseController extends Controller
             'disease.description' => 'nullable|string|max:255',
             'disease.image' => 'nullable|file',
             'disease.tags' => 'nullable|string|max:255',
+            'disease.article_id' => 'nullable|string|max:255',
         ]);
 
         $disease = Disease::find($id);
