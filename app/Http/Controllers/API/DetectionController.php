@@ -83,7 +83,7 @@ class DetectionController extends Controller
 
             $response = $response->wait();
 
-            dd($response->body());
+            dd($response);
 
             // $response->then(function (Response|TransferException $result) {
             //     dd($result);
