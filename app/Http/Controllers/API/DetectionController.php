@@ -71,20 +71,19 @@ class DetectionController extends Controller
             $plant = strtolower(Plant::select('plants.name')->find($request->input('plant_id')));
 
 
-            try {
-                $response = Http::async()->withHeaders([
-                    'Accept' => 'application/json',
-                    'Authorization' => 'bearer ' . $token->body(),
-                ])->attach(
-                    'file',
-                    Storage::get($image_path)
-                )->post($ml_endpoint, [
-                    'plant' => $plant,
-                ])->wait();
-            } catch (RequestException $error) {
-                dd($error);
-            }
 
+            $response = Http::async()->withHeaders([
+                'Accept' => 'application/json',
+                'Authorization' => 'bearer ' . $token->body(),
+            ])->attach(
+                'file',
+                Storage::get($image_path)
+            )->post($ml_endpoint, [
+                'plant' => $plant,
+            ])->wait();
+
+            dd($response);
+            
             // $response = $response->wait();
 
             // // dd($response);
