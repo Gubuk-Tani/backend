@@ -73,7 +73,7 @@ class DetectionController extends Controller
                 'Authorization' => 'bearer ' . $token->body(),
             ])->attach(
                 'file',
-                file_get_contents(Storage::get($image_path))
+                Storage::get($image_path)
             )->post($ml_endpoint, [
                 'plant' => $plant,
             ]);
