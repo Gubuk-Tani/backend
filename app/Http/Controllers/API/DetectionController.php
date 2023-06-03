@@ -67,8 +67,10 @@ class DetectionController extends Controller
 
             // return ResponseFormatter::success($token, 'Berhasil', 200);
 
-            $ml_endpoint = Setting::select('settings.value')->where('key', 'ml_endpoint')->first();
-            $plant = Plant::select('plants.name')->find($request->input('plant_id'));
+            $ml_endpoint = Setting::where('key', 'ml_endpoint')->first();
+            $ml_endpoint = $ml_endpoint->value;
+
+            $plant = Plant::find($request->input('plant_id'));
             $plant = strtolower($plant->name);
 
             $response = Http::async()->withHeaders([
@@ -78,7 +80,7 @@ class DetectionController extends Controller
                 'file',
                 Storage::get($image_path),
                 'plant.jpg'
-            )->post('https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection', [
+            )->post($ml_endpoint, [
                 'plant' => $plant,
             ])->wait();
 
