@@ -71,28 +71,32 @@ class DetectionController extends Controller
             $plant = strtolower(Plant::select('plants.name')->find($request->input('plant_id')));
 
 
-            $response = Http::async()->withHeaders([
-                'Accept' => 'application/json',
-                'Authorization' => 'bearer ' . $token->body(),
-            ])->attach(
-                'file',
-                Storage::get($image_path)
-            )->post($ml_endpoint, [
-                'plant' => $plant,
-            ]);
+            try {
+                $response = Http::async()->withHeaders([
+                    'Accept' => 'application/json',
+                    'Authorization' => 'bearer ' . $token->body(),
+                ])->attach(
+                    'file',
+                    Storage::get($image_path)
+                )->post($ml_endpoint, [
+                    'plant' => $plant,
+                ])->wait();
+            } catch (RequestException $error) {
+                dd($error);
+            }
 
-            $response = $response->wait();
+            // $response = $response->wait();
 
-            // dd($response);
+            // // dd($response);
 
-            $report = [
-                'successful' => $response->successful(),
-                'failed' => $response->failed(),
-                'client_error' => $response->clientError(),
-                'server_error' => $response->serverError(),
-            ];
+            // $report = [
+            //     'successful' => $response->successful(),
+            //     'failed' => $response->failed(),
+            //     'client_error' => $response->clientError(),
+            //     'server_error' => $response->serverError(),
+            // ];
 
-            return ResponseFormatter::success($report, 'Gagal?', 200);
+            // return ResponseFormatter::success($report, 'Gagal?', 200);
             // dd($response);
 
             // $response->then(function (Response|TransferException $result) {
