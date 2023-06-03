@@ -94,6 +94,7 @@ class DiseaseController extends Controller
             'disease.name' => 'required|string|max:255',
             'disease.description' => 'required|string|max:255',
             'disease.image' => 'nullable|file',
+            'disease.tags' => 'nullable|string|max:255',
         ]);
 
         try {
@@ -169,9 +170,10 @@ class DiseaseController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'image' => 'nullable|file',
+            'disease.name' => 'nullable|string|max:255',
+            'disease.description' => 'nullable|string|max:255',
+            'disease.image' => 'nullable|file',
+            'disease.tags' => 'nullable|string|max:255',
         ]);
 
         $disease = Disease::find($id);
@@ -182,22 +184,50 @@ class DiseaseController extends Controller
 
         try {
             $disease->update([
-                'name' => $request->input('name'),
-                'description' => $request->input('description'),
+                'name' => $request->input('disease.name'),
+                'description' => $request->input('disease.description'),
+                'article_id' => $request->input('disease.article_id'),
             ]);
 
             // Store image
-            if ($request->hasFile('image')) {
+            if ($request->hasFile('disease.image')) {
                 // Delete old avatar
                 if ($disease->image) {
                     Storage::delete($disease->image);
                 }
 
                 $image_path = '';
-                $image_path = $request->file('image')->store('disease');
+                $image_path = $request->file('disease.image')->store('disease');
 
                 $disease->update([
                     'image' => $image_path,
+                ]);
+            }
+
+            // Update Tags
+            $previousTags = DiseaseTag::where('disease_tags.disease_id', $disease->id);
+
+            $previousTags->delete();
+
+            $tags = explode(',', $request->input('disease.tags'));
+
+            foreach ($tags as $item) {
+                $tag = Tag::query();
+
+                $item = trim($item);
+
+                if (sizeof(Tag::where('tag', $item)->get()) == 0) {
+                    $tag = $tag->create([
+                        'tag' => $item,
+                    ]);
+                } else {
+                    $tag = $tag->where('tag', $item)->first();
+                }
+
+                // Article Tag
+                ArticleTag::create([
+                    'tag_id' => $tag->id,
+                    'disease_id' => $disease->id,
                 ]);
             }
 
