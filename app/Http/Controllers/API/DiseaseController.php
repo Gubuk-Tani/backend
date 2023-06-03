@@ -187,7 +187,7 @@ class DiseaseController extends Controller
             $disease->update([
                 'name' => $request->input('disease.name'),
                 'description' => $request->input('disease.description'),
-                'article_id' => $request->input('disease.article_id', 1),
+                'article_id' => $request->input('disease.article_id'),
             ]);
 
             // Store image
