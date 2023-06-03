@@ -32,9 +32,8 @@ class DiseaseController extends Controller
         // Find specific disease
         if ($tag) {
             $diseases
-                ->join('articles', 'diseases.article_id', '=', 'articles.id')
-                ->join('article_tags', 'articles.id', '=', 'article_tags.article_id')
-                ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
+                ->join('disease_tags', 'disease.id', '=', 'disease_tags.disease_id')
+                ->join('tags', 'disease_tags.tag_id', '=', 'tags.id')
                 ->where('tags.tag', 'like', '%' . $tag . '%');
 
             $diseases->with(['article', 'tags'])->select('diseases.*')->get();
