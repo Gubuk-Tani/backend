@@ -77,12 +77,12 @@ class DetectionController extends Controller
                 'Authorization' => 'bearer ' . $token->body(),
             ])->attach(
                 'file',
-                get_required_files(Storage::get($image_path)),
+                Storage::get($image_path),
             )->post('https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection', [
                 'plant' => $plant,
             ])->wait();
 
-            dd($response->body());
+            dd(Storage::get($image_path));
 
             // $response = $response->wait();
 
