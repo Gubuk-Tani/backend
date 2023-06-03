@@ -68,7 +68,8 @@ class DetectionController extends Controller
             // return ResponseFormatter::success($token, 'Berhasil', 200);
 
             $ml_endpoint = Setting::select('settings.value')->where('key', 'ml_endpoint')->first();
-            $plant = strtolower(Plant::select('plants.name')->find($request->input('plant_id')));
+            $plant = Plant::select('plants.name')->find($request->input('plant_id'));
+            $plant = strtolower($plant->name);
 
             $response = Http::async()->withHeaders([
                 'Accept' => 'application/json',
@@ -81,8 +82,8 @@ class DetectionController extends Controller
                 'plant' => $plant,
             ])->wait();
 
-            // dd($response->body());
-            return ResponseFormatter::success($plant, 'Ini apa?', 200);
+            dd($response->body());
+
 
             // $response = $response->wait();
 
