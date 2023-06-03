@@ -79,21 +79,9 @@ class DetectionController extends Controller
                 Storage::get($image_path)
             )->post($ml_endpoint, [
                 'plant' => $plant,
-            ])->then(
-                function (ResponseInterface $res) {
-                    $response = json_decode($res->getBody()->getContents());
+            ]);
 
-                    return $response;
-                },
-                // function (RequestException $e) {
-                //     $response = [];
-                //     $response->data = $e->getMessage();
-
-                //     return $response;
-                // }
-            );
-
-            $response->wait();
+            $response = $response->wait();
 
             dd($response->body());
 
