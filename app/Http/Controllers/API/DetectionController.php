@@ -10,6 +10,8 @@ use App\Models\Detection;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -72,9 +74,11 @@ class DetectionController extends Controller
             ])->async()->post($ml_endpoint, [
                 'plant' => $plant,
                 'file' => Storage::get($image_path),
-            ]);
+            ])->then(function (Response|TransferException $result) {
+                dd($result);
+            });
 
-            dd($response->body());
+
 
             $detection = Detection::create([
                 'image' => $image_path,
