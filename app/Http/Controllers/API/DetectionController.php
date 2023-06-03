@@ -77,7 +77,7 @@ class DetectionController extends Controller
             ])->attach(
                 'file',
                 Storage::get($image_path),
-                str_replace('detection/', '', $image_path)
+                str_replace('/', '_', $image_path)
             )->post($ml_endpoint, [
                 'plant' => $plant,
             ])->wait();
