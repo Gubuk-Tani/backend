@@ -71,12 +71,14 @@ class DetectionController extends Controller
             $response = Http::async()->withHeaders([
                 'Accept' => 'application/json',
                 'Authorization' => 'bearer ' . $token->body(),
-            ])->post($ml_endpoint, [
+            ])->attach(
+                'file',
+                file_get_contents(Storage::get($image_path))
+            )->post($ml_endpoint, [
                 'plant' => $plant,
-                'file' => Storage::get($image_path),
             ]);
 
-            dd($response->json());
+            dd($response);
 
             $detection = Detection::create([
                 'image' => $image_path,
