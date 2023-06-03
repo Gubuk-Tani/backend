@@ -83,7 +83,7 @@ class DetectionController extends Controller
 
             $response = $response->wait();
 
-            dd($ml_endpoint);
+            return ResponseFormatter::success($response, 'Gagal?', 200);
             // dd($response);
 
             // $response->then(function (Response|TransferException $result) {
