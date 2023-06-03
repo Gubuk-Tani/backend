@@ -80,7 +80,7 @@ class DetectionController extends Controller
                 Storage::get($image_path),
                 'plant.jpg'
             )->post('https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection', [
-                'plant' => $plant,
+                'plant' => 'potato',
             ])->wait();
 
             dd($response->body());
