@@ -68,19 +68,20 @@ class DetectionController extends Controller
             $ml_endpoint = Setting::select('settings.value')->where('key', 'ml_endpoint')->first();
             $plant = strtolower(Plant::select('plants.name')->find($request->input('plant_id')));
 
-            try {
-                $response = Http::async()->withHeaders([
-                    'Accept' => 'application/json',
-                    'Authorization' => 'bearer ' . $token->body(),
-                ])->attach(
-                    'file',
-                    Storage::get($image_path)
-                )->post($ml_endpoint, [
-                    'plant' => $plant,
-                ])->then(fn (Response|TransferException $result) => dd($result));
-            } catch (Exception $error) {
-                return ResponseFormatter::error('Error' . $error, 500);
-            }
+
+            $response = Http::async()->withHeaders([
+                'Accept' => 'application/json',
+                'Authorization' => 'bearer ' . $token->body(),
+            ])->attach(
+                'file',
+                Storage::get($image_path)
+            )->post($ml_endpoint, [
+                'plant' => $plant,
+            ]);
+
+            $response->then(function (Response|TransferException $result) {
+                dd($result);
+            });
 
             $detection = Detection::create([
                 'image' => $image_path,
