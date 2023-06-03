@@ -78,12 +78,12 @@ class DetectionController extends Controller
             ])->attach(
                 'file',
                 Storage::get($image_path)
-            )->post($ml_endpoint, [
+            )->post('https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection', [
                 'plant' => $plant,
             ])->wait();
 
             dd($response);
-            
+
             // $response = $response->wait();
 
             // // dd($response);
