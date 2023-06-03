@@ -78,7 +78,7 @@ class DetectionController extends Controller
                 'plant' => $plant,
             ]);
 
-            dd($response->json());
+            dd($response->body());
 
             $detection = Detection::create([
                 'image' => $image_path,
