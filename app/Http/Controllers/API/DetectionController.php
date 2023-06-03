@@ -53,7 +53,7 @@ class DetectionController extends Controller
 
         try {
             // Detection
-            $result = 'Coming soon...';
+            $result = 'Error';
 
             // Store images
             $image_path = '';
@@ -84,7 +84,9 @@ class DetectionController extends Controller
                 'plant' => $plant,
             ])->wait();
 
-            $result = $response->object()->label;
+            if ($response->object()) {
+                $result = $response->object()->label;
+            }
 
             $detection = Detection::create([
                 'image' => $image_path,
