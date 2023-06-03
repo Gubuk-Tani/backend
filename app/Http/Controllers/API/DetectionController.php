@@ -74,7 +74,7 @@ class DetectionController extends Controller
                 'file' => Storage::get($image_path),
             ]);
 
-            dd($response->json());
+            dd($response->body());
 
             $detection = Detection::create([
                 'image' => $image_path,
