@@ -84,26 +84,7 @@ class DetectionController extends Controller
                 'plant' => $plant,
             ])->wait();
 
-            return ResponseFormatter::success($response->object(), 'Success', 200);
-
-
-            // $response = $response->wait();
-
-            // // dd($response);
-
-            // $report = [
-            //     'successful' => $response->successful(),
-            //     'failed' => $response->failed(),
-            //     'client_error' => $response->clientError(),
-            //     'server_error' => $response->serverError(),
-            // ];
-
-            // return ResponseFormatter::success($report, 'Gagal?', 200);
-            // dd($response);
-
-            // $response->then(function (Response|TransferException $result) {
-            //     dd($result);
-            // });
+            $result = $response->object()->label;
 
             $detection = Detection::create([
                 'image' => $image_path,
