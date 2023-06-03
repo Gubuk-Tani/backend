@@ -79,7 +79,7 @@ class DetectionController extends Controller
                 'plant' => $plant,
             ])->wait();
 
-            dd($response);
+            dd($response->body());
 
             // $response->then(function (Response|TransferException $result) {
             //     dd($result);
