@@ -65,8 +65,6 @@ class DetectionController extends Controller
                 'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection'
             );
 
-            // return ResponseFormatter::success($token, 'Berhasil', 200);
-
             $ml_endpoint = Setting::where('key', 'ml_endpoint')->first();
             $ml_endpoint = $ml_endpoint->value;
 
@@ -79,7 +77,7 @@ class DetectionController extends Controller
             ])->attach(
                 'file',
                 Storage::get($image_path),
-                'plant.jpg'
+                str_replace('detection/', '', $image_path)
             )->post($ml_endpoint, [
                 'plant' => $plant,
             ])->wait();
