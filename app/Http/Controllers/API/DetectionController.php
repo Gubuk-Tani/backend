@@ -77,7 +77,9 @@ class DetectionController extends Controller
                 Storage::get($image_path)
             )->post($ml_endpoint, [
                 'plant' => $plant,
-            ])->wait();
+            ]);
+
+            $response->wait();
 
             dd($response->body());
 
