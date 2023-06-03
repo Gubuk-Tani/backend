@@ -84,7 +84,7 @@ class DetectionController extends Controller
                 'plant' => $plant,
             ])->wait();
 
-            dd($response->body());
+            dd($response->json());
 
 
             // $response = $response->wait();
