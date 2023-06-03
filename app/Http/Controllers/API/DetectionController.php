@@ -83,6 +83,8 @@ class DetectionController extends Controller
 
             $response = $response->wait();
 
+            dd($response);
+
             return ResponseFormatter::success($response, 'Gagal?', 200);
             // dd($response);
 
