@@ -77,11 +77,13 @@ class DetectionController extends Controller
                 Storage::get($image_path)
             )->post($ml_endpoint, [
                 'plant' => $plant,
-            ]);
+            ])->wait();
 
-            $response->then(function (Response|TransferException $result) {
-                dd($result);
-            });
+            dd($response);
+
+            // $response->then(function (Response|TransferException $result) {
+            //     dd($result);
+            // });
 
             $detection = Detection::create([
                 'image' => $image_path,
