@@ -52,25 +52,28 @@ class DetectionController extends Controller
         ]);
 
         try {
-            // Detection
-            $result = 'Error';
-
             // Store images
-            $image_path = '';
-            $image_path = $request->file('image')->store('detection');
+            if ($request->hasFile('image')) {
+                $image_path = '';
+                $image_path = $request->file('image')->store('detection');
+            }
 
+            // Get ML Endpoint
             $ml_endpoint = Setting::where('key', 'ml_endpoint')->first();
             $ml_endpoint = $ml_endpoint->value;
 
+            // Get Identity Token
             $token = Http::withHeaders([
                 'Metadata-Flavor' => 'Google'
             ])->get(
                 'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=' . $ml_endpoint
             );
 
+            // Get Plant
             $plant = Plant::find($request->input('plant_id'));
             $plant = strtolower($plant->name);
 
+            // Detection
             $response = Http::async()->withHeaders([
                 'Accept' => 'application/json',
                 'Authorization' => 'bearer ' . $token->body(),
@@ -82,10 +85,13 @@ class DetectionController extends Controller
                 'plant' => $plant,
             ])->wait();
 
+            $result = 'Error';
+
             if ($response->object()) {
                 $result = $response->object()->label;
             }
 
+            // Add Detection
             $detection = Detection::create([
                 'image' => $image_path,
                 'result' => $result,
