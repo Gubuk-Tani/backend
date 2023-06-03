@@ -78,16 +78,21 @@ class DetectionController extends Controller
                 'file',
                 Storage::get($image_path)
             )->post($ml_endpoint, [
-                'form_params' => [
-                    'plant' => $plant,
-                ]
+                'plant' => $plant,
             ]);
 
             $response = $response->wait();
 
-            dd($response);
+            // dd($response);
 
-            return ResponseFormatter::success($response, 'Gagal?', 200);
+            $report = [
+                'successful' => $response->successful(),
+                'failed' => $response->failed(),
+                'client_error' => $response->clientError(),
+                'server_error' => $response->serverError(),
+            ];
+
+            return ResponseFormatter::success($report, 'Gagal?', 200);
             // dd($response);
 
             // $response->then(function (Response|TransferException $result) {
