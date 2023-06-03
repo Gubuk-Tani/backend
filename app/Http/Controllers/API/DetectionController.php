@@ -59,14 +59,14 @@ class DetectionController extends Controller
             $image_path = '';
             $image_path = $request->file('image')->store('detection');
 
+            $ml_endpoint = Setting::where('key', 'ml_endpoint')->first();
+            $ml_endpoint = $ml_endpoint->value;
+
             $token = Http::withHeaders([
                 'Metadata-Flavor' => 'Google'
             ])->get(
-                'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=https://us-central1-capstone-gubuk-tani.cloudfunctions.net/detection'
+                'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience=' . $ml_endpoint
             );
-
-            $ml_endpoint = Setting::where('key', 'ml_endpoint')->first();
-            $ml_endpoint = $ml_endpoint->value;
 
             $plant = Plant::find($request->input('plant_id'));
             $plant = strtolower($plant->name);
