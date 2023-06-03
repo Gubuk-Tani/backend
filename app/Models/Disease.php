@@ -36,7 +36,7 @@ class Disease extends Model
 
     public function article()
     {
-        return $this->belongsTo(Article::class)->with('tags');
+        return $this->belongsTo(Article::class)->with(['tags', 'article_images']);
     }
 
     public function tags()
