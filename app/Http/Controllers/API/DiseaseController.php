@@ -37,7 +37,7 @@ class DiseaseController extends Controller
                 ->join('tags', 'article_tags.tag_id', '=', 'tags.id')
                 ->where('tags.tag', 'like', '%' . $tag . '%');
 
-            $diseases->with('article')->select('diseases.*')->get();
+            $diseases->with(['article', 'tags'])->select('diseases.*')->get();
 
             return ResponseFormatter::success(
                 [
@@ -61,7 +61,7 @@ class DiseaseController extends Controller
                 ->orWhere('tags.tag', 'like', '%' . $search . '%');
         }
 
-        $diseases->with('article')->select('diseases.*')->latest();
+        $diseases->with(['article', 'tags'])->select('diseases.*')->latest();
 
         return ResponseFormatter::success(
             $diseases->paginate($limit),
@@ -115,7 +115,7 @@ class DiseaseController extends Controller
                 ]);
             }
 
-            $disease = Disease::with('article')->find($disease->id);
+            $disease = Disease::with(['article', 'tags'])->find($disease->id);
 
             // Tags
             $tags = explode(',', $request->input('disease.tags'));
@@ -153,7 +153,7 @@ class DiseaseController extends Controller
      */
     public function show(string $id)
     {
-        $disease = Disease::with('article')->find($id);
+        $disease = Disease::with(['article', 'tags'])->find($id);
 
         if (!$disease) {
             return ResponseFormatter::error('Penyakit Tidak Ditemukan', 404);
@@ -232,7 +232,7 @@ class DiseaseController extends Controller
                 ]);
             }
 
-            $disease = Disease::with('article')->find($id);
+            $disease = Disease::with(['article', 'tags'])->find($id);
 
             return ResponseFormatter::success([
                 'disease' => $disease,
