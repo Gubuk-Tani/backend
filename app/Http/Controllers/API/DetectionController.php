@@ -68,7 +68,7 @@ class DetectionController extends Controller
             $ml_endpoint = Setting::select('settings.value')->where('key', 'ml_endpoint')->first();
             $plant = strtolower(Plant::select('plants.name')->find($request->input('plant_id')));
 
-            $response = Http::withHeaders([
+            $response = Http::timeout(3)->withHeaders([
                 'Accept' => 'application/json',
                 'Authorization' => 'bearer ' . $token->body(),
             ])->attach(
