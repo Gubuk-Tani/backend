@@ -32,7 +32,7 @@ class DiseaseController extends Controller
         // Find specific disease
         if ($tag) {
             $diseases
-                ->join('disease_tags', 'disease.id', '=', 'disease_tags.disease_id')
+                ->join('disease_tags', 'diseases.id', '=', 'disease_tags.disease_id')
                 ->join('tags', 'disease_tags.tag_id', '=', 'tags.id')
                 ->where('tags.tag', 'like', '%' . $tag . '%');
 
