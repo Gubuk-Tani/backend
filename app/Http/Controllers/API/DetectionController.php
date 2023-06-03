@@ -83,7 +83,8 @@ class DetectionController extends Controller
 
             $response = $response->wait();
 
-            dd($response);
+            dd($ml_endpoint);
+            // dd($response);
 
             // $response->then(function (Response|TransferException $result) {
             //     dd($result);
