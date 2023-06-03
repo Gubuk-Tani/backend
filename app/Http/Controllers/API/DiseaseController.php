@@ -82,10 +82,10 @@ class DiseaseController extends Controller
             $request->input('content')
         ) {
             $article = (new ArticleController)->addArticle($request);
-        }
-
-        if ($request->input('article_id')) {
+        } else if ($request->input('article_id')) {
             $article = Article::find($request->input('article_id'));
+        } else {
+            $article = Article::find(1);
         }
 
         // Add Disease
