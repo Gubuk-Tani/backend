@@ -226,7 +226,7 @@ class DiseaseController extends Controller
                 }
 
                 // Article Tag
-                ArticleTag::create([
+                DiseaseTag::create([
                     'tag_id' => $tag->id,
                     'disease_id' => $disease->id,
                 ]);
