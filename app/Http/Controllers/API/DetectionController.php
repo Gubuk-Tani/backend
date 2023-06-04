@@ -42,21 +42,8 @@ class DetectionController extends Controller
             $detections->where('user_id', $user_id);
         }
 
-        $detections->latest()->get();
-
-        $result = [];
-
-        foreach ($detections as $detection) {
-            $disease = $this->getDisease($detection);
-
-            $result[] = [
-                'detection' => $detection,
-                'disease' => $disease,
-            ];
-        }
-
         return ResponseFormatter::success(
-            $detections,
+            $detections->latest()->paginate($limit),
             'Riwayat Deteksi Penyakit Ditemukan',
             200,
         );
