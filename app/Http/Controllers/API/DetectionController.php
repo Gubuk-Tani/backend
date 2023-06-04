@@ -43,7 +43,7 @@ class DetectionController extends Controller
             $detections->where('user_id', $user_id);
         }
 
-        $detections->with(['plant']);
+        $detections->with(['plant', 'user']);
 
         return ResponseFormatter::success(
             $detections->latest()->paginate($limit),
