@@ -44,7 +44,7 @@ class DetectionController extends Controller
 
         $detections->latest()->get();
 
-        $result = [];
+        $result = null;
 
         foreach ($detections as $detection) {
             $disease = $this->getDisease($detection);
