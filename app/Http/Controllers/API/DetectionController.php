@@ -42,7 +42,7 @@ class DetectionController extends Controller
             $detections->where('user_id', $user_id);
         }
 
-        $detections->latest()->get();
+        $detections->get()->latest();
 
         $result = [];
 
