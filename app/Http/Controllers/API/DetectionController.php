@@ -35,14 +35,14 @@ class DetectionController extends Controller
         if ($range && $range == 'today') {
             $date = Carbon::today();
 
-            $detections->where('created_at', '>=', $date);
+            $detections->where('created_at', '>=', $date)->get();
         }
 
         if ($user_id) {
-            $detections->where('user_id', $user_id);
+            $detections->where('user_id', $user_id)->get();
         }
 
-        $detections->get()->latest();
+        $detections->latest();
 
         $result = [];
 
