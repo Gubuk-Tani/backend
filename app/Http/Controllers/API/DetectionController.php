@@ -33,6 +33,7 @@ class DetectionController extends Controller
         $detections = Detection::query();
 
         if ($range && $range == 'today') {
+            $limit = 50;
             $date = Carbon::today();
 
             $detections->where('created_at', '>=', $date);
