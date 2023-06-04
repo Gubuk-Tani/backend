@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Psr7\Response;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -26,16 +27,23 @@ class DetectionController extends Controller
     public function index(Request $request)
     {
         $user_id = $request->input('user_id');
+        $range = $request->input('range');
         $limit = $request->input('limit', 10);
 
         $detections = Detection::query();
+
+        if ($range && $range == 'today') {
+            $date = Carbon::today();
+
+            $detections->where('created_at', '>=', $date)->get();
+        }
 
         if ($user_id) {
             $detections->where('user_id', $user_id);
         }
 
         return ResponseFormatter::success(
-            $detections->paginate($limit),
+            $detections->latest()->paginate($limit),
             'Riwayat Deteksi Penyakit Ditemukan',
             200,
         );

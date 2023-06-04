@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\OverviewController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,4 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('plant', 'PlantController');
     Route::apiResource('plant/{plant_id}/label', 'LabelController');
     Route::apiResource('detection', 'DetectionController');
+
+    Route::get('/overview', [OverviewController::class, 'index']);
 });
