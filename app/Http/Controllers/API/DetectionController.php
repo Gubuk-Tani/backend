@@ -112,7 +112,7 @@ class DetectionController extends Controller
                 'user_id' => Auth::user()->id,
             ]);
 
-            $detection = Detection::find($detection->id);
+            $detection = Detection::query()->find($detection->id);
 
             // Get Disease
             $disease = $this->getDisease($detection);
