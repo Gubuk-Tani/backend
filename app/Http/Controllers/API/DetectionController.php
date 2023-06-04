@@ -112,12 +112,10 @@ class DetectionController extends Controller
                 'user_id' => Auth::user()->id,
             ]);
 
-            $detection = Detection::query()->find($detection->id);
+            $detection = Detection::query()->with(['plant', 'user'])->find($detection->id);
 
             // Get Disease
             $disease = $this->getDisease($detection);
-
-            $detection->with(['plant', 'user']);
 
             return ResponseFormatter::success([
                 'detection' => $detection,
