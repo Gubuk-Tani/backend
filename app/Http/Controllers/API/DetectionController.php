@@ -74,14 +74,14 @@ class DetectionController extends Controller
             $plant = strtolower($plant->name);
 
             // Detection
-            $response = Http::retry(5)->async()->withHeaders([
+            $response = Http::async()->withHeaders([
                 'Accept' => 'application/json',
                 'Authorization' => 'bearer ' . $token->body(),
             ])->attach(
                 'file',
                 Storage::get($image_path),
                 str_replace('/', '_', $image_path)
-            )->post($ml_endpoint, [
+            )->retry(5)->post($ml_endpoint, [
                 'plant' => $plant,
             ])->wait();
 
