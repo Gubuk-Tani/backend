@@ -74,7 +74,7 @@ class DetectionController extends Controller
             $plant = strtolower($plant->name);
 
             // Detection
-            $response = Http::retry(2)->async()->withHeaders([
+            $response = Http::retry(5)->async()->withHeaders([
                 'Accept' => 'application/json',
                 'Authorization' => 'bearer ' . $token->body(),
             ])->attach(
