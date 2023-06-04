@@ -44,7 +44,7 @@ class DetectionController extends Controller
 
         $detections->latest()->get();
 
-        $result = null;
+        $result = [];
 
         foreach ($detections as $detection) {
             $disease = $this->getDisease($detection);
@@ -56,7 +56,7 @@ class DetectionController extends Controller
         }
 
         return ResponseFormatter::success(
-            $result,
+            $detections,
             'Riwayat Deteksi Penyakit Ditemukan',
             200,
         );
