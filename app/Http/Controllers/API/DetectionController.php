@@ -35,15 +35,28 @@ class DetectionController extends Controller
         if ($range && $range == 'today') {
             $date = Carbon::today();
 
-            $detections->where('created_at', '>=', $date)->get();
+            $detections->where('created_at', '>=', $date);
         }
 
         if ($user_id) {
             $detections->where('user_id', $user_id);
         }
 
+        $detections->latest()->get();
+
+        $result = [];
+
+        foreach ($detections as $detection) {
+            $disease = $this->getDisease($detection);
+
+            $result[] = [
+                'detection' => $detection,
+                'disease' => $disease,
+            ];
+        }
+
         return ResponseFormatter::success(
-            $detections->latest()->paginate($limit),
+            $detections->paginate($limit),
             'Riwayat Deteksi Penyakit Ditemukan',
             200,
         );
