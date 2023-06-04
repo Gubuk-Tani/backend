@@ -42,7 +42,7 @@ class DetectionController extends Controller
             $detections->where('user_id', $user_id);
         }
 
-        $detections->latest();
+        $detections->latest()->get();
 
         $result = [];
 
@@ -56,7 +56,7 @@ class DetectionController extends Controller
         }
 
         return ResponseFormatter::success(
-            $detections->get(),
+            $detections,
             'Riwayat Deteksi Penyakit Ditemukan',
             200,
         );
