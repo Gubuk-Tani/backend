@@ -86,15 +86,18 @@ class DetectionController extends Controller
             ])->wait();
 
             $result = 'Error';
+            $confidence = null;
 
             if ($response->object()) {
                 $result = $response->object()->label;
+                $confidence = $response->object()->confidence;
             }
 
             // Add Detection
             $detection = Detection::create([
                 'image' => $image_path,
                 'result' => $result,
+                'confidence' => $confidence,
                 'plant_id' => $request->input('plant_id'),
                 'user_id' => Auth::user()->id,
             ]);

@@ -19,6 +19,7 @@ class Detection extends Model
     protected $fillable = [
         'image',
         'result',
+        'confidence',
         'plant_id',
         'user_id',
     ];
@@ -34,7 +35,8 @@ class Detection extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }
