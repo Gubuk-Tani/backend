@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
 
             $table->string('image');
-            $table->string('result');
+            $table->string('result')->nullable();
+            $table->string('confidence')->nullable();
             $table->bigInteger('plant_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
 
