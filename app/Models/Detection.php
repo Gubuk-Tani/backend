@@ -39,4 +39,9 @@ class Detection extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function plant()
+    {
+        return $this->belongsTo(Plant::class);
+    }
 }

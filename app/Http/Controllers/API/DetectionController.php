@@ -42,6 +42,8 @@ class DetectionController extends Controller
             $detections->where('user_id', $user_id);
         }
 
+        $detections->with(['plant']);
+
         return ResponseFormatter::success(
             $detections->latest()->paginate($limit),
             'Riwayat Deteksi Penyakit Ditemukan',
