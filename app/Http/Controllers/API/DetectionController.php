@@ -99,8 +99,10 @@ class DetectionController extends Controller
             $confidence = null;
 
             if ($response->object()) {
-                if ($response->object()->error) {
-                    $result = $response->object()->error;
+                $error = $response->object()->error;
+                
+                if ($error) {
+                    $result = $error;
                     $confidence = '';
                 } else {
                     $result = $response->object()->label;
