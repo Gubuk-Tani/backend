@@ -100,7 +100,7 @@ class DetectionController extends Controller
 
             if ($response->object()) {
                 if ($response->object()->status == 'error') {
-                    $result = $response->object()->error;
+                    $result = $response->object()->message;
 
                     return ResponseFormatter::error($result, 400);
                 }
