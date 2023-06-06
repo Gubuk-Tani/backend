@@ -99,18 +99,15 @@ class DetectionController extends Controller
             $confidence = null;
 
             if ($response->object()) {
-                if (gettype($response->object()->error) == 'string') {
+                if ($response->object()->status == 'error') {
                     $result = $response->object()->error;
-                    $confidence = '';
+
+                    return ResponseFormatter::error($result, 400);
                 }
 
-                if (gettype($response->object()->label) == 'string') {
-                    $result = $response->object()->label;
-                    $confidence = $response->object()->confidence;
-                }
+                $result = $response->object()->label;
+                $confidence = $response->object()->confidence;
             }
-
-
 
             // Add Detection
             $detection = Detection::create([
