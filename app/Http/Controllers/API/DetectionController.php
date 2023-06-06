@@ -98,15 +98,17 @@ class DetectionController extends Controller
             $result = 'Error';
             $confidence = null;
 
-            if ($response->object()->label) {
-                $result = $response->object()->label;
-                $confidence = $response->object()->confidence;
+            if ($response->object()) {
+                if ($response->object()->error) {
+                    $result = $response->object()->error;
+                    $confidence = '';
+                } else {
+                    $result = $response->object()->label;
+                    $confidence = $response->object()->confidence;
+                }
             }
 
-            if ($response->object()->error) {
-                $result = $response->object()->error;
-                $confidence = '';
-            }
+
 
             // Add Detection
             $detection = Detection::create([
