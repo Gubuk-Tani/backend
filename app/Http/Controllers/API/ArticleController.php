@@ -42,7 +42,7 @@ class ArticleController extends Controller
                 ->orWhere('tags.tag', 'like', '%' . $search . '%');
         }
 
-        $articles->with(['articleImages', 'tags', 'comments'])->select('articles.*')->latest();
+        $articles->with(['articleImages', 'tags', 'comments', 'user'])->select('articles.*')->latest();
 
         return ResponseFormatter::success(
             $articles->paginate($limit),
@@ -73,7 +73,7 @@ class ArticleController extends Controller
      */
     public function show(string $id)
     {
-        $article = Article::with(['articleImages', 'tags', 'comments'])->find($id);
+        $article = Article::with(['articleImages', 'tags', 'comments', 'user'])->find($id);
 
         if (!$article) {
             return ResponseFormatter::error('Artikel Tidak Ditemukan', 404);
