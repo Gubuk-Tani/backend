@@ -25,7 +25,7 @@ class CommentController extends Controller
             $comments->where('user_id', $user_id);
         }
 
-        $comments->with(['user'])->latest();
+        $comments->with(['user']);
 
         return ResponseFormatter::success(
             $comments->paginate($limit),
