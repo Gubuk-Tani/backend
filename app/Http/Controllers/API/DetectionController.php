@@ -64,7 +64,8 @@ class DetectionController extends Controller
         $user = Auth::user();
         $count_detections = Detection::where('user_id', $user->id)->get()->count();
 
-        if (Auth::user()->type != 'premium' && $count_detections >= 10) {
+        // Regular User Limitation
+        if ($user->role != 'admin' && $user->type != 'premium' && $count_detections >= 10) {
             return ResponseFormatter::error('Kuota Deteksi Penyakit Gratis telah Habis. Nikmati Deteksi Tanpa Batas dengan Melakukan Donasi.', 400);
         }
 
