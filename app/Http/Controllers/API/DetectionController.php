@@ -61,6 +61,13 @@ class DetectionController extends Controller
             'plant_id' => 'required|string|max:255',
         ]);
 
+        $user = Auth::user();
+        $count_detections = Detection::where('user_id', $user->id)->get()->count();
+
+        if (Auth::user()->type != 'premium' && $count_detections >= 10) {
+            return ResponseFormatter::error('Kuota Deteksi Penyakit Gratis telah Terlampaui. Nikmati Deteksi Tanpa Batas dengan Melakukan Donasi.', 400);
+        }
+
         try {
             // Store images
             if ($request->hasFile('image')) {
