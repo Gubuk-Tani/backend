@@ -28,7 +28,7 @@ class CommentController extends Controller
         $comments->with(['user']);
 
         return ResponseFormatter::success(
-            $comments->paginate($limit),
+            $comments->paginate(),
             'Komentar Ditemukan',
             200
         );
