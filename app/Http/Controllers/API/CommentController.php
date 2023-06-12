@@ -16,7 +16,7 @@ class CommentController extends Controller
     public function index(Request $request, string $article_id)
     {
         $user_id = $request->input('user_id');
-        $limit = $request->input('limit', 10);
+        $limit = $request->input('limit', 100);
 
         $comments = Comment::query();
         $comments->where('article_id', $article_id);
@@ -28,7 +28,7 @@ class CommentController extends Controller
         $comments->with(['user']);
 
         return ResponseFormatter::success(
-            $comments->paginate(),
+            $comments->paginate($limit),
             'Komentar Ditemukan',
             200
         );
