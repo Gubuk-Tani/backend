@@ -14,9 +14,23 @@ class PaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user_id = $request->input('user_id');
+
+        $payments = Payment::query();
+
+        if ($user_id) {
+            $payments->where('user_id', $user_id);
+        }
+
+        return ResponseFormatter::success(
+            [
+                'payments' => $payments->get(),
+            ],
+            'Bukti Pembayaran Ditemukan',
+            200,
+        );
     }
 
     /**
@@ -50,7 +64,7 @@ class PaymentController extends Controller
                 'payment' => $payment,
             ], 'Bukti Pembayaran Berhasil Ditambahkan', 201);
         } catch (Exception $error) {
-            return ResponseFormatter::error('Bukti Pembayaran Gagal Dibuat' . $error, 500);
+            return ResponseFormatter::error('Bukti Pembayaran Gagal Dibuat', 500);
         }
     }
 
@@ -59,7 +73,15 @@ class PaymentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $payment = Payment::find($id);
+
+        if (!$payment) {
+            return ResponseFormatter::error('Bukti Pembayaran Tidak Ditemukan', 404);
+        }
+
+        return ResponseFormatter::success([
+            'payment' => $payment,
+        ], 'Bukti Pembayaran Ditemukan', 200);
     }
 
     /**
@@ -67,7 +89,29 @@ class PaymentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'status' => 'required|string|max:255',
+        ]);
+
+        $payment = Payment::find($id);
+
+        if (!$payment) {
+            return ResponseFormatter::error('Bukti Pembayaran Tidak Ditemukan', 404);
+        }
+
+        try {
+            $payment = $payment->update([
+                'status' => $request->input('status'),
+            ]);
+
+            $payment = Payment::find($id);
+
+            return ResponseFormatter::success([
+                'payment' => $payment,
+            ], 'Status Bukti Pembayaran Berhasil Diubah', 200);
+        } catch (Exception $error) {
+            return ResponseFormatter::error('Status Bukti Pembayaran Gagal Diubah', 500);
+        }
     }
 
     /**
@@ -75,6 +119,18 @@ class PaymentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $payment = Payment::find($id);
+
+        if (!$payment) {
+            return ResponseFormatter::error('Bukti Pembayaran Tidak Ditemukan', 404);
+        }
+
+        $payment->delete();
+
+        return ResponseFormatter::success(
+            $payment->id,
+            'Bukti Pembayaran Berhasil Dihapus',
+            200
+        );
     }
 }
