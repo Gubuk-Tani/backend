@@ -61,7 +61,7 @@ class PaymentMethodController extends Controller
         }
 
         return ResponseFormatter::success([
-            'payment_$payment_method' => $payment_method,
+            'payment_method' => $payment_method,
         ], 'Metode Pembayaran Ditemukan', 200);
     }
 
