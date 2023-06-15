@@ -47,4 +47,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Payment
     Route::apiResource('payment_method', 'PaymentMethodController');
+    Route::apiResource('payment', 'PaymentController');
 });
