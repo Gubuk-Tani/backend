@@ -261,12 +261,6 @@ class DiseaseController extends Controller
             // Delete Desease
             $disease->delete();
 
-            // Delete Article
-            Comment::where('article_id', $disease->article_id)->delete();
-            ArticleImage::where('article_id', $disease->article_id)->delete();
-            ArticleTag::where('article_id', $disease->article_id)->delete();
-            Article::find($disease->article_id)->delete();
-
             return ResponseFormatter::success(
                 $disease->id,
                 'Penyakit Berhasil Dihapus',
