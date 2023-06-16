@@ -7,60 +7,203 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+### Gubuk Tani Backend
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. Instal Package
+    `composer install`
+2. Change environment
+3. Create symbolic link to public storage
+    `php artisan storage:link`
+4. Run database migration
+    `php artisan migrate`
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# API Endpoints
 
-## Learning Laravel
+## User
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Method | Endpoint | Expectation | Code | Response Body | Result |
+| --- | --- | --- | --- | --- | --- |
+| POST | /auth/register | Bisa menambahkan data User | 201 | Access Token dan Satu data User | ✅ |
+| GET | /auth/login | Bisa log In dengan Email dan Password | 200 | Access Token dan Satu data User | ✅ |
+| GET | /profile | Bisa mengambil data User | 200 | Satu data User | ✅ |
+| POST | /profile | Bisa mengubah data User | 200 | Satu data User | ✅ |
+| POST | /auth/logout | Bisa Log Out dan revoke Access Token | 200 | Token revoke status | ✅ |
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Article
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Method | Endpoint | Expectation | Code | Response Body | Result |
+| --- | --- | --- | --- | --- | --- |
+| POST | /article | Bisa menambahkan Article | 201 | Satu data Article | ✅ |
+| GET | /article
 
-## Laravel Sponsors
+Query:
+- search ✅
+- type ✅
+- page ✅
+- limit ✅ | Bisa mengambil daftar data Article | 200 | Array data Article | ✅ |
+| GET | /article/{id} | Bisa mengambil salah satu data Article | 200 | Satu data Article | ✅ |
+| POST | /article/{id}
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Additional form data:
+_method: ‘PUT’ | Bisa mengubah salah satu data Article | 200 | Satu data Article | ✅ |
+| DELETE | /article/{id} | Bisa menghapus data salah satu Article | 200 | ID Article | ✅ |
 
-### Premium Partners
+## Article Image
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+| Method | Endpoint | Expectation | Code | Response Body | Result |
+| --- | --- | --- | --- | --- | --- |
+| POST | /article/{article_id}/image | Bisa menambahkan Article Image | 201 | Satu data Article Image | ✅ |
+| GET | /article/{article_id}/image
 
-## Contributing
+Query:
+- page ✅
+- limit ✅ | Bisa mengambil daftar data Article Image | 200 | Array data Article Image | ✅ |
+| GET | /article/{article_id}/image/{id} | Bisa mengambil salah satu data Article Image | 200 | Satu data Article Image | ✅ |
+| POST | /article/{article_id}/image/{id}
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Additional form data:
+_method: ‘PUT’ | Bisa mengubah salah satu data Article Image | 200 | Satu data Article Image | ✅ |
+| DELETE | /article/{article_id}/image/{id} | Bisa menghapus data salah satu Article Image | 200 | ID Article Image | ✅ |
 
-## Code of Conduct
+## Comment
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Method | Endpoint | Expectation | Code | Response Body | Result |
+| --- | --- | --- | --- | --- | --- |
+| POST | /article/{article_id}/comment | Bisa menambahkan Comment | 201 | Satu data Comment | ✅ |
+| GET | /article/{article_id}/comment
 
-## Security Vulnerabilities
+Query:
+- user_id ✅
+- page ✅
+- limit ✅ | Bisa mengambil daftar data Comment | 200 | Array data Comment | ✅ |
+| GET | /article/{article_id}/comment/{id} | Bisa mengambil salah satu data Comment | 200 | Satu data Comment | ✅ |
+| PUT | /article/{article_id}/comment/{id} | Bisa mengubah salah satu data Comment | 200 | Satu data Comment | ✅ |
+| DELETE | /article/{article_id}/comment/{id} | Bisa menghapus data salah satu Comment | 200 | ID Comment | ✅ |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Disease
 
-## License
+| Method | Endpoint | Expectation | Code | Response Body | Result |
+| --- | --- | --- | --- | --- | --- |
+| POST | /disease | Bisa menambahkan Disease dan Article Disease | 201 | Satu data Disease dan Article Disease | ✅ |
+| GET | /disease
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Query:
+- tag ⚠️ ✅
+- search ✅
+- page ✅
+- limit ✅ | Bisa mengambil daftar data Disease | 200 | Array data Disease
+
+Ket.:
+⚠️ Penggunaan query tag hanya akan menghasilkan satu data Disease | ✅ |
+| GET | /disease/{id} | Bisa mengambil salah satu data Disease | 200 | Satu data Disease | ✅ |
+| POST | /disease/{id}
+
+Additional form data:
+_method: ‘PUT’ | Bisa mengubah salah satu data Disease | 200 | Satu data Disease | ✅ |
+| DELETE | /disease/{id} | Bisa menghapus data salah satu Disease dan Article Disease | 200 | ID Disease | ✅ |
+
+## Pesticide
+
+| Method | Endpoint | Expectation | Code | Response Body | Result |
+| --- | --- | --- | --- | --- | --- |
+| POST | /pesticide | Bisa menambahkan Pesticide dan Article Pesticide | 201 | Satu data Pesticide dan Article Pesticide | ✅ |
+| GET | /pesticide
+
+Query:
+- tag ⚠️ ✅
+- search ✅
+- page ✅
+- limit ✅ | Bisa mengambil daftar data Pesticide | 200 | Array data Pesticide
+
+Ket.:
+⚠️ Penggunaan query tag hanya akan menghasilkan satu data Pesticide | ✅ |
+| GET | /pesticide/{id} | Bisa mengambil salah satu data Pesticide | 200 | Satu data Pesticide | ✅ |
+| POST | /pesticide/{id}
+
+Additional form data:
+_method: ‘PUT’ | Bisa mengubah salah satu data Pesticide | 200 | Satu data Pesticide | ✅ |
+| DELETE | /pesticide/{id} | Bisa menghapus data salah satu Pesticide dan Article Pesticide | 200 | ID Pesticide | ✅ |
+
+## Setting
+
+| Method | Endpoint | Expectation | Code | Response Body | Result |
+| --- | --- | --- | --- | --- | --- |
+| POST | /setting
+
+Ket.:
+⚠️ Admin only | Bisa menambahkan satu data Setting | 201 | Semua data Setting | ✅ |
+| GET | /setting
+ | Bisa mengambil semua data Setting | 200 | Semua data Setting | ✅ |
+| POST | /setting/update
+
+Additional form data:
+_method: ‘PUT’
+
+Ket.:
+⚠️ Admin only | Bisa mengubah salah satu Setting | 200 | Semua data Setting | ✅ |
+| DELETE | /setting/delete
+
+Ket.:
+⚠️ Admin only | Bisa menghapus salah satu data Setting | 200 | Key Setting | ✅ |
+
+## Image Recognition (Machine Learning)
+
+### Plant (ML)
+
+| Method | Endpoint | Expectation | Code | Response Body | Result |
+| --- | --- | --- | --- | --- | --- |
+| POST | /plant
+
+Ket.:
+⚠️ Admin only | Bisa menambahkan Plant | 201 | Satu data Plant | ✅ |
+| GET | /plant | Bisa mengambil daftar data Plant | 200 | Array data Plant | ✅ |
+| GET | /plant/{id} | Bisa mengambil salah satu data Plant | 200 | Satu data Plant | ✅ |
+| POST | /plant/{id}
+
+Additional form data:
+_method: ‘PUT’
+
+Ket.:
+⚠️ Admin only | Bisa mengubah salah satu data Plant | 200 | Satu data Plant | ✅ |
+| DELETE | /plant/{id}
+
+Ket.:
+⚠️ Admin only | Bisa menghapus data salah satu Plant dan Label | 200 | ID Plant | ✅ |
+
+### Label (ML)
+
+| Method | Endpoint | Expectation | Code | Response Body | Result |
+| --- | --- | --- | --- | --- | --- |
+| POST | /plant/{plant_id}/label
+
+Ket.:
+⚠️ Admin only | Bisa menambahkan Label | 201 | Satu data Label | ✅ |
+| GET | /plant/{plant_id}/label | Bisa mengambil daftar data Label | 200 | Array data Label | ✅ |
+| GET | /plant/{plant_id}/label/{id} | Bisa mengambil salah satu data Label | 200 | Satu data Label | ✅ |
+| PUT | /plant/{plant_id}/label/{id}
+
+Ket.:
+⚠️ Admin only | Bisa mengubah salah satu data Label | 200 | Satu data Label | ✅ |
+| DELETE | /plant/{plant_id}/label/{id}
+
+Ket.:
+⚠️ Admin only | Bisa menghapus data salah satu Label | 200 | ID Label | ✅ |
+
+### Detection (ML)
+
+| Method | Endpoint | Expectation | Code | Response Body | Result |
+| --- | --- | --- | --- | --- | --- |
+| POST | /detection | Bisa menambahkan Detection | 201 | Hasil Detection | ✅ |
+| GET | /detection
+
+Query:
+- user_id ✅
+- limit ✅
+- page ✅ | Bisa mengambil daftar data Detection | 200 | Array data Detection | ✅ |
+| GET | /detection/{id} | Bisa mengambil salah satu data Detection | 200 | Satu data Detection | ✅ |
+| DELETE | /detection/{id} | Bisa menghapus data salah satu Detection | 200 | ID Detection | ✅ |
+
+---
+
+#LifeAtBangkit
