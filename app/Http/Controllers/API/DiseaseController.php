@@ -34,17 +34,7 @@ class DiseaseController extends Controller
             $diseases
                 ->join('disease_tags', 'diseases.id', '=', 'disease_tags.disease_id')
                 ->join('tags', 'disease_tags.tag_id', '=', 'tags.id')
-                ->where('tags.tag', 'like', '%' . $tag . '%');
-
-            $diseases->with(['article', 'tags'])->select('diseases.*')->get();
-
-            return ResponseFormatter::success(
-                [
-                    'disease' => $diseases->first(),
-                ],
-                'Penyakit Berhasil Ditemukan',
-                200
-            );
+                ->where('tags.tag', $tag);
         }
 
         // Search (optional)
