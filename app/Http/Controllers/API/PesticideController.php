@@ -194,12 +194,6 @@ class PesticideController extends Controller
             // Delete Pesticide
             $pesticide->delete();
 
-            // Delete Article
-            Comment::where('article_id', $pesticide->article_id)->delete();
-            ArticleImage::where('article_id', $pesticide->article_id)->delete();
-            ArticleTag::where('article_id', $pesticide->article_id)->delete();
-            Article::find($pesticide->article_id)->delete();
-
             return ResponseFormatter::success(
                 $pesticide->id,
                 'Pestisida Berhasil Dihapus',
