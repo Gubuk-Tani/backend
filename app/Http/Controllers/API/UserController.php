@@ -21,7 +21,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:50|unique:users',
+            'username' => 'required|string|alpha_dash|max:50|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'string', new Password],
         ]);
@@ -105,7 +105,7 @@ class UserController extends Controller
 
         if ($user->username != $request->input('username')) {
             $request->validate([
-                'username' => 'nullable|string|max:50|unique:users',
+                'username' => 'nullable|string|alpha_dash|max:50|unique:users',
             ]);
         }
 
@@ -192,7 +192,7 @@ class UserController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:50|unique:users',
+            'username' => 'required|string|alpha_dash|max:50|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'avatar' => 'nullable|file',
             'city' => 'nullable|string|max:255',
@@ -273,7 +273,7 @@ class UserController extends Controller
         // Validate username
         if ($user->username != $request->input('username')) {
             $request->validate([
-                'username' => 'required|string|max:50|unique:users',
+                'username' => 'required|string|alpha_dash|max:50|unique:users',
             ]);
         }
 
