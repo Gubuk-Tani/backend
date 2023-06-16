@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('labels', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name')->unique();
+            $table->string('name');
             $table->bigInteger('plant_id')->unsigned();
 
             $table->foreign('plant_id')->references('id')->on('plants')->onUpdate('cascade')->onDelete('no action');
