@@ -6,6 +6,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -105,6 +106,13 @@ class PaymentController extends Controller
             ]);
 
             $payment = Payment::find($id);
+
+            // Change user type
+            if ($payment->status == 'Valid') {
+                User::find($payment->user_id)->update([
+                    'type' => 'premium',
+                ]);
+            }
 
             return ResponseFormatter::success([
                 'payment' => $payment,
