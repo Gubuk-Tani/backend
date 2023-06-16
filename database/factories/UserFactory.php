@@ -38,6 +38,7 @@ class UserFactory extends Factory
             'username' => $this->faker->userName(),
             'city' => $this->faker->city(),
             'avatar' => null,
+            'type' => 'regular',
             'role' => 'enduser',
         ];
     }
