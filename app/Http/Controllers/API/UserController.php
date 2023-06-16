@@ -290,6 +290,7 @@ class UserController extends Controller
                 'username' => $request->input('username'),
                 'email' => $request->input('email'),
                 'city' => $request->input('city'),
+                'type' => $request->input('type'),
                 'role' => $request->input('role'),
             ]);
 
